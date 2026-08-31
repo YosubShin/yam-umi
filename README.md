@@ -4,7 +4,7 @@ An open-source, hand-worn [UMI](https://umi-gripper.github.io/)-style data
 collection device for the **[I2RT YAM](https://i2rt.com/products/yam-6-dof-arm)
 arm's linear gripper**.
 
-Unlike robot-agnostic UMI variants, YAM-UMI is deliberately built for one arm.
+YAM-UMI is deliberately built for one arm.
 It mirrors the YAM linear gripper's jaw geometry, reuses the YAM wrist camera
 mount, and reproduces the gripper's own rail-and-pinion mechanism, so **the
 camera pose relative to the gripper tips, and the way those tips move, are the
@@ -38,6 +38,21 @@ loop, then train a policy that consumes wrist-camera images. That only works if
 what the camera sees at collection time resembles what it sees at deployment
 time.
 
+That principle is UMI's own, not this project's. The
+[UMI paper](https://arxiv.org/abs/2402.10329) states it directly — *"When
+deploying UMI on a robot, we place GoPro cameras with the same location with
+respect to the same 3D-printed fingers as on the hand-held gripper"* — and reports
+wrist-camera video that is "almost indistinguishable" between demonstration and
+deployment.
+
+What differs between designs is the **direction** in which the match is made. UMI
+adapts the robot to the interface: mount UMI's fingers and a GoPro on any arm with
+a parallel jaw stroke over 85 mm, and the match follows. YAM-UMI adapts the
+interface to the robot: the arm keeps its stock gripper tips and stock camera
+mount, and the handheld device changes to match. That direction suits a fleet
+already standardized on one arm, or a deployment configuration you would rather
+not modify — at the cost of fitting nothing else.
+
 This design began as an attempt to use
 [HandUMI](https://github.com/murobotics-ai/handumi-hw) on a YAM. HandUMI is one
 of the few open hand-worn UMI designs whose linkage keeps the two jaws
@@ -48,11 +63,13 @@ point here. Two things kept it from working on a YAM.
 
 ### 1. The camera extrinsic could not be matched
 
-HandUMI is deliberately robot-agnostic: one body, swappable tips, retarget in
-software. The consequence is that the wrist camera sits where the shared body
-allows rather than where any particular arm's camera sits, and its mount does not
-readily adjust to reproduce the YAM camera's angle relative to the gripper tips.
-The resulting viewpoint shift is a domain gap the policy has to absorb.
+HandUMI takes a third position: rather than adapting either side, it keeps one
+shared body across arms and swaps only the gripper tips, leaving the rest to
+software retargeting. That is what lets a single rig serve an AgileX Piper, an ARX
+X5, a Trossen WidowX and others — but it means the wrist camera sits where the
+shared body allows, and its mount does not readily adjust to reproduce the YAM
+camera's angle relative to the gripper tips. The resulting viewpoint shift is a
+domain gap the policy has to absorb.
 
 YAM-UMI instead reuses the YAM gripper's own fisheye camera mount on a body that
 reproduces the YAM jaw geometry, so the camera-to-tip transform is matched by
@@ -240,8 +257,12 @@ which is why the rest of the docs name it.
 
 ## Related work
 
-- **[UMI](https://umi-gripper.github.io/)** (Chi et al.) — the original
-  handheld gripper and fiducial-based aperture sensing this design returns to.
+- **[UMI](https://umi-gripper.github.io/)** (Chi et al.,
+  [arXiv:2402.10329](https://arxiv.org/abs/2402.10329)) — the original handheld
+  gripper, the source of both the fiducial-based aperture sensing this design
+  returns to and the principle of minimizing the observation embodiment gap.
+  UMI achieves that match by mounting its own fingers and camera on the robot;
+  YAM-UMI reverses the direction.
 - **[HandUMI](https://github.com/murobotics-ai/handumi-hw)** (Murobotics) — the
   direct starting point for this work, and one of the few open hand-worn UMI
   designs with a synchronized parallel-jaw mechanism. YAM-UMI takes the
