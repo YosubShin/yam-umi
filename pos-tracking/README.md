@@ -88,10 +88,60 @@ pose. This is where the choice of external camera shows up:
 | Sony (4K 30p, H.264) | 100% | 90.8% | 77.5% |
 | Arducam B0591 (1080p, focus locked via v4l2) | 79.6% | 68.3% | 59.1% |
 
-The Arducam numbers were measured before any mount or field-of-view tuning for that
-camera. The 15 mm faces give it comfortable pixels at this range, so the gap to
-the Sony is a field-of-view and mounting difference rather than a sensor limit —
-treat 68% as a floor, not a verdict on cheaper webcams.
+The B0591 numbers were measured before any mount or field-of-view tuning for
+that camera. The 15 mm faces give it comfortable pixels at this range, so the
+gap to the Sony is a field-of-view and mounting difference rather than a
+sensor limit — treat 68% as a floor, not a verdict on cheaper webcams.
+
+#### The camera that ended up winning: Arducam B0587 (4K low-light)
+
+After the table above we moved to the **Arducam B0587** (4K STARVIS2 sensor,
+~88° FOV, UVC/MJPEG) and it became the workhorse — it is the camera behind
+every number in [`dynamic-accuracy.md`](dynamic-accuracy.md):
+
+| Metric | Result |
+|---|---|
+| ChArUco intrinsics | 0.744 px RMS at 4K |
+| Rigid marker-pair RMS (best pairs) | 0.7 mm |
+| Detection vs arm speed | flat to 3 m/s — no measured ceiling |
+| Per-frame ≥1-face detection, full teleop session | 99.97% |
+
+**Why it works — the motion-blur unlock.** Fiducial tracking during motion
+dies by corner smear, not by frame rate: at 25 fps a marker moving 1 m/s
+travels 40 mm between frames, but what kills the *decode* is how far it moves
+during the *exposure*. The recipe is a very fast shutter on a sensor that can
+afford it:
+
+- **Exposure 0.2 ms** (`exposure_time_absolute=2`, manual mode, gain 0,
+  sharpness 0). At 0.2 ms, even 3 m/s of motion smears only 0.6 mm —
+  sub-pixel at ~1 m standoff — so the corner detector simply never sees
+  blur, and the speed ceiling disappears.
+- **A low-light sensor makes that exposure usable.** 0.2 ms under ordinary
+  indoor lighting starves a typical webcam sensor; the STARVIS2's
+  sensitivity yields clean, zero-gain images at that shutter in a bright
+  lab. This pairing — fast shutter *enabled by* low-light silicon — is the
+  whole trick, and it is worth selecting cameras for explicitly. (In dim,
+  ceiling-light-only conditions the same camera certified at 1 ms +
+  gain 20 with equivalent tracking quality.)
+
+Hard-won caveats that travel with this camera class:
+
+1. **Control readback lies.** UVC exposure writes are accepted and read
+   back correctly *whether or not the imaging pipeline latched them* — and
+   on some modules they only latch after streaming has started. Apply the
+   settings mid-stream and verify **behaviourally**: wave a hand in front
+   of the lens; at 0.2 ms it must be frozen, not smeared. We lost a full
+   session to trusting readback before learning this.
+2. **Image brightness is not an exposure probe** on HDR/tone-mapping ISPs —
+   some modules normalise brightness toward a target regardless of the real
+   exposure. Streaks and blur are the probe; brightness is not.
+3. **Some modules' `focus_absolute` is accepted but inert** (the B0587
+   focuses by physically rotating the barrel only). Verify focus with a
+   live sharpness meter, then mechanically lock the barrel with a witness
+   mark — and recalibrate intrinsics after *any* barrel movement.
+4. **Flickering LED lighting strobes at sub-millisecond shutters.** Room
+   light that looks steady to the eye can beat against a 0.2 ms exposure;
+   use DC or high-frequency-driven lighting for the capture volume.
 
 #### Locking focus on the external camera
 
