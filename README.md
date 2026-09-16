@@ -155,15 +155,17 @@ pose — depends strongly on the external camera:
 | Sony (4K 30p, H.264) | 100% | 90.8% | 77.5% |
 | Arducam B0591 (1080p, focus locked via v4l2) | 79.6% | 68.3% | 59.1% |
 
-Two caveats travel with these numbers, and they are not small:
-
-1. **Settled holds only.** Tracking during dynamic motion has not been certified.
-   Do not read 0.46 mm as moving-arm accuracy.
-2. **Relative, not absolute.** Precision and relative motion are trustworthy;
-   absolute pose in the robot's frame is not yet resolved. A camera-vs-forward-
-   kinematics comparison showed median 14% scale and 9° direction discrepancies,
-   suspected to be forward-kinematics, lever-arm, or extrinsics error rather than
-   the camera, but not yet run down.
+**Update (2026-09):** both of the original caveats — settled-holds-only, and
+absolute pose unresolved — have since been resolved by measuring this same
+ball design on the real YAM arm against its joint encoders. During full-speed
+teleoperated manipulation (30 episodes, ~23k frames), fused-ball pose agrees
+with the robot's forward kinematics to **7.7 mm median / 22.7 mm p95 / 1.7°**
+at a tool point 13 cm from the ball, with pose solved in 98.5% of frames;
+the error budget is dominated by the hand-eye calibration (4.8 mm residual),
+not the camera. The earlier 14%/9° discrepancies were extrinsics error, fixed
+by a proper `calibrateRobotWorldHandEye` solve harvested from ordinary
+episodes. Full numbers, method, and known failure modes:
+[`pos-tracking/dynamic-accuracy.md`](pos-tracking/dynamic-accuracy.md).
 
 The Arducam coverage was measured before any mount or field-of-view tuning for that
 camera, so it is a floor rather than a verdict on cheaper webcams.
@@ -242,10 +244,11 @@ which is why the rest of the docs name it.
 - **No end-to-end result yet.** The device has not been used to collect a dataset
   and train a policy. The camera-extrinsic parity claim is by construction and
   has not been validated against recorded imagery.
-- **Wrist tracker precision is characterised for settled holds only**
-  (0.46 mm RMS at ~94 cm). Dynamic-motion tracking is not yet certified, and
-  absolute pose in the robot frame is unresolved — see
-  [`pos-tracking/README.md`](pos-tracking/README.md).
+- **Wrist tracker: settled-hold precision 0.46 mm RMS at ~94 cm; dynamic
+  tracking and absolute robot-frame pose are now certified** (7.7 mm median
+  agreement with the arm's forward kinematics across full-speed
+  manipulation) — see
+  [`pos-tracking/dynamic-accuracy.md`](pos-tracking/dynamic-accuracy.md).
 - **The tracker's calibration procedure is not published**, so the numbers above
   can be read but not yet reproduced.
 - **Aperture accuracy is unmeasured.** A comparison of fiducial-derived width

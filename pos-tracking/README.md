@@ -123,15 +123,17 @@ is replugged, so reapply them at the start of every session — or with a udev r
 
 #### What these numbers do and do not support
 
-1. **Settled holds only.** Tracking during dynamic motion has not been certified;
-   that measurement is still outstanding. Do not quote 0.46 mm as accuracy for a
-   moving arm — which is, of course, the case that matters for data collection.
-2. **Relative, not absolute.** Precision and relative motion are trustworthy.
-   Absolute pose in the robot's frame is not. A camera-versus-forward-kinematics
-   comparison showed median 14% scale and 9° direction discrepancies. The
-   suspicion is forward-kinematics, lever-arm, or extrinsics error rather than the
-   camera itself, but it has not been run down, so no absolute world-frame claim
-   is being made here.
+1. **Settled holds only** — *resolved 2026-09*: dynamic tracking has since
+   been certified on the real arm at full manipulation speed; see
+   [`dynamic-accuracy.md`](dynamic-accuracy.md). The 0.46 mm figure remains
+   the settled-hold precision, consistent with the 0.7 mm rigid-pair RMS
+   measured there.
+2. **Relative, not absolute** — *resolved 2026-09*: the 14% scale / 9°
+   direction discrepancies were extrinsics error, fixed by a proper
+   robot-world hand-eye calibration; absolute robot-frame pose now agrees
+   with forward kinematics to 7.7 mm median / 22.7 mm p95, with the
+   hand-eye residual (4.8 mm) as the floor. Details and method in
+   [`dynamic-accuracy.md`](dynamic-accuracy.md).
 
 <!-- TODO: publish the calibration procedure itself — how the bundle solve is run
      and what it outputs — so someone else can reproduce these numbers rather than
