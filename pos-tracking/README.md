@@ -7,8 +7,10 @@ used — it needs nothing from this directory and keeps collection portable.
 What is here is a **dodecahedral ArUco marker ball** on a stalk, observed by an
 external forward-facing camera, for setups that can accommodate a fixed camera.
 It measures sub-millimetre on settled holds (numbers below), at the cost of
-confining collection to that camera's view. Markers use the **`DICT_4X4_50`**
-dictionary.
+confining collection to that camera's view. Ball markers use the
+**`DICT_4X4_100`** dictionary, IDs 25–49; IDs 0–24 are reserved for the
+robot-mounted ball used to validate tracking against forward kinematics (see
+[forward-cam-umi](https://github.com/YosubShin/forward-cam-umi)).
 
 <p align="center">
   <img src="../media/assembly-with-tracker.jpg" alt="The assembled YAM-UMI gripper with the dodecahedral ArUco marker ball mounted on its wrist stalk" width="560">
@@ -22,10 +24,8 @@ stalk, held clear of the hand and of the fisheye camera's view.</em></p>
 |---|---|---|
 | `dodeca_marker_ball_v2` | 51.05 across | Regular dodecahedron; carries the 15 mm markers |
 | `stalk_rod_80mm` | 8 × 8 × 80 | Rod holding the ball clear of the hand |
-| `wrist_stalk_adapter_v3` | 44 × 14 × 29 | Mounts the stalk to the wrist |
-| `wrist_stalk_arc_adapter` | 44 × 14 × 49.8 | Arc-mount variant of the adapter |
+| `wrist_stalk_arc_adapter` | 44 × 14 × 49.8 | Mounts the stalk to the wrist |
 | `arc_extender` | 43.5 × 41.5 × 57 | Extends the arc mount |
-| `retainer_radial_tab` | 60.3 × 14 × 75.6 | Retains the ball on the stalk |
 
 A dodecahedron is used so that at least one face is well-conditioned for pose
 estimation from any viewing direction, which removes the orientation blind spots
@@ -33,17 +33,36 @@ a single planar marker has.
 
 ## Markers
 
-`marker_sheet_ball_15mm_FIXED.pdf` — **15 mm markers on 19.5 mm tiles**, applied
-to the twelve faces of the ball.
+`glove_markers_v4.pdf`, group *dodecahedron ball*: **15 mm markers on 19.5 mm
+tiles, IDs 25–35**, applied to eleven faces of the ball.
+
+The left column of the sheet is all YAM-UMI needs: the *dodecahedron ball*
+group and the *tips WRIST* group ([below](#aperture-markers)).
+
+### Ignore the right column
+
+The right-hand column — the *tails* (BACK, TOP, FORWARD, OUTSIDE, BOTTOM) and
+*base* (BACK, TOP) groups, IDs 36–49 — is not used by YAM-UMI. Don't print or cut
+those for this build.
+
+They belong to [forward-cam-umi](https://github.com/YosubShin/forward-cam-umi), an attempt to remove the wrist camera and
+make the glove entirely electronics-free. Without a wrist camera, the external
+forward camera has to recover both wrist pose and gripper width by itself, and
+that takes extra markers and printed parts: tails that ride on the gripper tips
+and stay visible when the tips themselves are occluded, and a reference marker
+holder on the back of the gripper to measure them against. Both projects share
+this sheet so the marker IDs never collide.
 
 > **Print at 100% scale.** In the print dialog, choose *Actual size* and disable
 > *Fit to page*, *Shrink oversized pages*, and any scaling. A sheet printed at
 > 97% produces pose estimates that look plausible and are wrong by 3% in range —
 > a failure that will not announce itself.
 
-After printing, measure a marker with calipers against 15 mm before cutting
-anything out. This takes ten seconds and is the only check that catches a
-mis-scaled print.
+After printing, check the 100 mm bar with calipers before cutting anything out,
+then measure one marker's black square in each group you use and record that
+value in the config. This takes a minute and is the only check that catches a
+mis-scaled print. As the sheet notes, use matte paper for markers on faces that
+point up or down.
 
 Apply markers with double-sided tape across the **entire** face, not just the
 edges, so they cannot curl or lift. A marker that bows near an edge biases the
@@ -51,8 +70,8 @@ corner detection that pose estimation depends on.
 
 ### Marker placement is not prescribed
 
-There is deliberately **no face-to-ID mapping to follow**. Apply the twelve
-markers to the twelve faces in any arrangement, then recover the layout by
+There is deliberately **no face-to-ID mapping to follow**. Apply the eleven
+markers to the faces in any arrangement, then recover the layout by
 running the assembled ball through a solver that estimates each marker's pose in
 the ball's body frame from observations across many viewpoints.
 
@@ -191,13 +210,16 @@ is replugged, so reapply them at the start of every session — or with a udev r
 
 ## Aperture markers
 
-Gripper aperture is read from ArUco markers on the gripper tips, seen by the
-wrist fisheye camera.
+Gripper aperture is read from AprilTag markers on the gripper tips, seen by the
+wrist fisheye camera. Because the wrist camera sees both tips in every frame, the
+gripper width can be solved at any moment and recorded alongside the video, so the
+training dataset carries the gripper width for every frame.
 
-`markers/tip_markers_9mm_ID13_14.pdf` — **9 mm markers, IDs 13 and 14**, one per
-tip. The 9 mm size is chosen to stay resolvable in the fisheye view, where the
-tips sit well off-axis and the effective resolution is much lower than the
-sensor's nominal figure suggests.
+`glove_markers_v4.pdf`, group *tips WRIST*: **6 mm AprilTag 16h5 markers on
+8 mm tiles, IDs 2 (A) and 3 (B)**, one per tip. They use a separate AprilTag
+family so they don't take IDs from the ArUco range. The markers have to stay
+resolvable in the fisheye view, where the tips sit well off-axis and the
+effective resolution is much lower than the sensor's nominal figure suggests.
 
 The same 100% scale rule and full-face taping apply as for the ball markers
 above.
@@ -208,8 +230,3 @@ it moves the marker toward the centre of the frame and away from the distorted
 edge; the limit is mechanical, not optical, since the tip narrows and eventually
 offers no flat patch wide enough to seat a marker. See
 [assembly](../docs/assembly.md#4-aperture-markers).
-
-An earlier variant detected aperture from the external forward-facing camera
-instead, using 12 mm markers on printed tails that carried them behind the jaws.
-That approach and its parts live in a separate repository, since they belong to
-the external-camera setup rather than to this one.

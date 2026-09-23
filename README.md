@@ -9,7 +9,7 @@ It mirrors the YAM linear gripper's jaw geometry, reuses the YAM wrist camera
 mount, and reproduces the gripper's own rail-and-pinion mechanism, so **the
 camera pose relative to the gripper tips, and the way those tips move, are the
 same during data collection as on the deployed robot**. Aperture is recovered
-from ArUco fiducials rather than a servo encoder, so there is no motor to
+from fiducial markers rather than a servo encoder, so there is no motor to
 backdrive and no loaded plastic linkage to fail.
 
 <p align="center">
@@ -104,7 +104,7 @@ operator's pinch and the resulting width is the one the robot can actually
 execute. There is no mechanism-level retargeting between collection and
 deployment, because there is no mechanism difference to retarget.
 
-Aperture is read from ArUco markers, the approach the original UMI used.
+Aperture is read from fiducial markers on the tips, the approach the original UMI used.
 Consequences:
 
 - **No backdrive friction.** The pinch is governed by the rails and the
@@ -127,7 +127,7 @@ servo in the loop and no linkage carrying the load.</em></p>
 | Signal | Source |
 |---|---|
 | Wrist pose, SE(3) | Camera SLAM from the wrist fisheye — the original UMI approach, and the default here. Optionally, a dodecahedral ArUco marker ball observed by an external camera |
-| Gripper aperture | 9 mm ArUco markers on the gripper tips, seen by the wrist fisheye camera |
+| Gripper aperture | 6 mm AprilTag (16h5) markers on the gripper tips, seen by the wrist fisheye camera |
 | Wrist-view video | Fisheye USB camera on the YAM camera mount |
 
 SLAM is the default because it keeps collection portable, which is the whole
@@ -209,15 +209,20 @@ See [`pos-tracking/README.md`](pos-tracking/README.md) for marker specifications
 and printing instructions.
 
 - `wrist_dodecahedron_marker/` — the dodecahedral marker ball (51 mm across),
-  its stalk, wrist adapter, arc adapter, extender, and retainer, plus the 15 mm
-  marker sheet.
-- `markers/` — the 9 mm tip-marker sheet (IDs 13, 14) used for aperture sensing
-  from the wrist fisheye camera.
+  its stalk, arc adapter, and extender.
+- `glove_markers_v4.pdf` — the marker sheet: 15 mm ArUco markers for the ball
+  and the 6 mm AprilTag tip markers used for aperture sensing from the wrist
+  fisheye camera.
 
-Marker placement on the ball is not prescribed: stick the twelve markers on in
+Marker placement on the ball is not prescribed: stick the eleven markers on in
 any arrangement and recover the face-to-ID mapping by calibration. That absorbs
 print-and-stick tolerances instead of baking them in as permanent error, but it
 also means each ball's calibration is specific to the unit it was measured on.
+
+The marker sheet also carries markers for
+[forward-cam-umi](https://github.com/YosubShin/forward-cam-umi), an attempt to remove the wrist camera and make the glove
+entirely electronics-free. Ignore those; see
+[Ignore the right column](pos-tracking/README.md#ignore-the-right-column).
 
 ## Build
 

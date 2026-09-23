@@ -82,8 +82,8 @@ against the insert rather than clamping the joint.
 
 ## 4. Aperture markers
 
-Apply the 9 mm tip markers (`pos-tracking/markers/tip_markers_9mm_ID13_14.pdf`,
-IDs 13 and 14 — one per tip) to the gripper tips, one on each jaw.
+Apply the 6 mm tip markers from `pos-tracking/glove_markers_v4.pdf` (group
+*tips WRIST*: AprilTag 16h5 IDs 2 and 3) to the gripper tips, one on each jaw.
 
 **Position each marker 25 mm from the gripper base** — as far from the fisheye
 camera as the tip's flat area allows.
@@ -123,7 +123,7 @@ then mount the Arducam module.
 **Set the focus, then leave it alone.** The wrist fisheye focuses mechanically —
 you turn the lens barrel by hand; there is no autofocus and nothing to set in
 software. Focus it at the working distance where the gripper tips and the
-manipulated object sit, checking that the 9 mm tip markers resolve cleanly at both
+manipulated object sit, checking that the 6 mm tip markers resolve cleanly at both
 open and closed aperture, then lock the lens with its retaining ring so handling
 cannot shift it.
 
@@ -150,10 +150,18 @@ straps per finger for a firmer hold.
 ## 7. Wrist tracker (optional)
 
 If using marker-based pose tracking rather than SLAM, assemble the dodecahedral
-tracker: `stalk_rod_80mm` into `wrist_stalk_adapter_v3`, `dodeca_marker_ball_v2`
-on the stalk, retained by `retainer_radial_tab`.
+tracker:
 
-Apply the 15 mm markers to the twelve faces **in any arrangement**. The
+1. Attach `arc_extender` to the back of the gripper.
+2. Attach `wrist_stalk_arc_adapter` to the `arc_extender`.
+3. Attach one end of `stalk_rod_80mm` to the `wrist_stalk_arc_adapter`.
+4. Attach `dodeca_marker_ball_v2` to the other end of the rod, fixing it with an
+   M3 screw.
+
+**Mount the ball on the rod before applying any markers.** The M3 screw that
+fixes the ball to the rod has to be driven first.
+
+Apply the 15 mm ball markers (IDs 25–35) to eleven of the faces **in any arrangement**. The
 face-to-ID mapping is recovered by calibration afterwards rather than prescribed,
 so there is no layout to match — but the calibration output is specific to the
 ball you built and has to be kept with it. See
