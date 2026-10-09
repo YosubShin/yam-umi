@@ -4,6 +4,20 @@ An open-source, hand-worn [UMI](https://umi-gripper.github.io/)-style data
 collection device for the **[I2RT YAM](https://i2rt.com/products/yam-6-dof-arm)
 arm's linear gripper**.
 
+[![Glove collection demo with YAM-UMI and experimental tracking accessories](media/glove-collection-demo.jpg)](media/glove-collection-demo.mp4)
+
+*Watch the [glove collection demo](media/glove-collection-demo.mp4) (63 seconds,
+9.4 MB). This setup combines the YAM-UMI gripper with
+[forward-cam-umi](https://github.com/YosubShin/forward-cam-umi) marker tails,
+the optional dodecahedral wrist tracker, and a head-mounted camera.*
+
+<p align="center">
+  <a href="media/rollout-demo-1x-720p.mp4"><img src="media/rollout-demo-12x.gif" alt="YAM-UMI rollout demo at 12 times normal speed" width="480"></a>
+</p>
+<p align="center"><em>Rollout demo at 12× speed (full sequence, about 20 seconds).
+Watch the silent 720p video at <a href="media/rollout-demo-1x-720p.mp4">normal speed</a>
+or <a href="media/rollout-demo-6x-720p.mp4">6× speed</a>.</em></p>
+
 YAM-UMI is deliberately built for one arm.
 It mirrors the YAM linear gripper's jaw geometry, reuses the YAM wrist camera
 mount, and reproduces the gripper's own rail-and-pinion mechanism, so **the
