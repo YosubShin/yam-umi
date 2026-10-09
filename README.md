@@ -131,8 +131,9 @@ servo in the loop and no linkage carrying the load.</em></p>
 | Wrist-view video | Fisheye USB camera on the YAM camera mount |
 
 SLAM is the default because it keeps collection portable, which is the whole
-point of a UMI-style rig. Nothing in this repository is required for it — the
-wrist camera and mount are all it needs.
+point of a UMI-style rig. The visual-inertial SLAM path does not need the
+marker-ball assembly; the wrist-camera tip markers are still used to measure
+aperture.
 
 ### Optional: dodecahedral wrist tracker
 
@@ -173,8 +174,9 @@ camera, so it is a floor rather than a verdict on cheaper webcams.
 See [`pos-tracking/README.md`](pos-tracking/README.md) for the build and
 calibration procedure.
 
-A VR-controller mount is not provided but would be straightforward to add —
-contributions welcome.
+The third-party [tinyumi Quest-controller mount](https://github.com/vovw/tinyumi/blob/main/pos-tracking/quest_mount/handumi_v1/README.md)
+provides an alternative pose source. It requires that fork's revised base plate
+and mounting hardware and has not been tested by the YAM-UMI authors.
 
 ## Design updates
 
@@ -234,10 +236,11 @@ any arrangement and recover the face-to-ID mapping by calibration. That absorbs
 print-and-stick tolerances instead of baking them in as permanent error, but it
 also means each ball's calibration is specific to the unit it was measured on.
 
-The marker sheet also carries markers for
-[forward-cam-umi](https://github.com/YosubShin/forward-cam-umi), an attempt to remove the wrist camera and make the glove
-entirely electronics-free. Ignore those; see
-[Ignore the right column](pos-tracking/README.md#ignore-the-right-column).
+The marker sheet also carries tail and base markers for
+[forward-cam-umi](https://github.com/YosubShin/forward-cam-umi), which provide
+occlusion backup and external-camera aperture measurements. These require
+additional printed parts; see
+[optional forward-camera extensions](pos-tracking/README.md#optional-forward-camera-extensions).
 
 ## Build
 
@@ -257,20 +260,25 @@ hand-held device — PETG is simply what these were printed in.
 plate and pick the one that runs smoothest** in your assembly. Printer, filament
 and insert alignment all shift the effective fit, so the right variant is
 empirical rather than predictable; `v3` was the best fit in the reference build,
-which is why the rest of the docs name it.
+but choose the variant that runs most smoothly on your unit.
 
 ## Status and limitations
 
-- **No end-to-end result yet.** The device has not been used to collect a dataset
-  and train a policy. The camera-extrinsic parity claim is by construction and
-  has not been validated against recorded imagery.
+- **Glove collection and training:** the companion
+  [forward-cam-umi workflow](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/README.md)
+  reports four glove sessions (about 70 episodes) recorded, solved, built into
+  training datasets, and used for training. Camera-extrinsic parity remains a
+  separate claim that has not been validated against recorded imagery.
 - **Wrist tracker: settled-hold precision 0.46 mm RMS at ~94 cm; dynamic
   tracking and absolute robot-frame pose are now certified** (7.7 mm median
   agreement with the arm's forward kinematics across full-speed
   manipulation) — see
   [`pos-tracking/dynamic-accuracy.md`](pos-tracking/dynamic-accuracy.md).
-- **The tracker's calibration procedure is not published**, so the numbers above
-  can be read but not yet reproduced.
+- **Camera and glove-marker calibration:** commands for camera intrinsics,
+  ball geometry, and gripper-marker geometry are published in
+  [forward-cam-umi](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/README.md).
+  Robot-side hand-eye calibration and dataset construction require the robot's
+  kinematics and are separate from this assembly.
 - **Aperture accuracy is unmeasured.** A comparison of fiducial-derived width
   against the YAM encoder, or against calipers over a swept aperture, would be
   the most valuable single addition to this repo.

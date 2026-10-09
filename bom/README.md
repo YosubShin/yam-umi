@@ -100,9 +100,11 @@ Two of the supplies are more particular than they look:
   adhesion keeps the markers flat. A marker fixed only at its edges will curl, and
   a curled ArUco marker degrades pose estimates before it looks visibly wrong.
 
-Fasteners are deliberately given as **assortment kits rather than exact counts**.
-The build uses a handful of M3 and M4 screws in a few lengths; pick what fits as
-you go rather than working to a parts list.
+The shopping links are for **assortment kits**; use the quantities and connection
+requirements in the [assembly guide](../docs/assembly.md) when selecting screws.
+All M3 screws in the base gripper and optional marker-ball assembly must be
+low-profile button-head screws. For the M4 finger screws, check both handle
+engagement and clearance from the opposite rack.
 
 ## Also excluded
 

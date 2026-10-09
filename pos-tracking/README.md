@@ -2,13 +2,16 @@
 
 **This is an optional add-on.** The default way to recover wrist pose with
 YAM-UMI is camera SLAM from the wrist fisheye, the same approach the original UMI
-used — it needs nothing from this directory and keeps collection portable.
+used, with visual-inertial SLAM. It needs no marker-ball hardware and keeps
+collection portable. The wrist-camera aperture markers described below are
+still needed to measure jaw opening.
 
 What is here is a **dodecahedral ArUco marker ball** on a stalk, observed by an
 external forward-facing camera, for setups that can accommodate a fixed camera.
 It measures sub-millimetre on settled holds (numbers below), at the cost of
 confining collection to that camera's view. Ball markers use the
-**`DICT_4X4_100`** dictionary, IDs 25–49; IDs 0–24 are reserved for the
+**`DICT_4X4_100`** dictionary, IDs 25–35; IDs 36–49 are for the
+forward-camera extension described below. IDs 0–24 are reserved for the
 robot-mounted ball used to validate tracking against forward kinematics (see
 [forward-cam-umi](https://github.com/YosubShin/forward-cam-umi)).
 
@@ -33,40 +36,42 @@ a single planar marker has.
 
 ## Markers
 
-`glove_markers_v4.pdf`, group *dodecahedron ball*: **15 mm markers on 19.5 mm
-tiles, IDs 25–35**, applied to eleven faces of the ball.
+`glove_markers_v4.pdf`, group *dodecahedron ball*: **nominal 15 mm black
+squares on 19.5 mm tiles, IDs 25–35**, applied to eleven faces of the ball.
+Use measured black-square sizes for calibration.
 
-The left column of the sheet is all YAM-UMI needs: the *dodecahedron ball*
-group and the *tips WRIST* group ([below](#aperture-markers)).
+The basic wrist-camera-and-ball assembly uses the sheet's left column:
+the *dodecahedron ball* group and the *tips WRIST* group
+([below](#aperture-markers)).
 
-### Ignore the right column
+### Optional forward-camera extensions
 
-The right-hand column — the *tails* (BACK, TOP, FORWARD, OUTSIDE, BOTTOM) and
-*base* (BACK, TOP) groups, IDs 36–49 — is not used by YAM-UMI. Don't print or cut
-those for this build.
+The right-hand column contains the *tails* (BACK, TOP, FORWARD, OUTSIDE,
+BOTTOM) and *base* (BACK, TOP) groups, IDs 36–49. They belong to the
+[forward-cam-umi extensions](https://github.com/YosubShin/forward-cam-umi):
+extra markers and printed parts provide an occlusion backup for the ball
+and let the external camera measure aperture. They are not required for
+the basic wrist-camera-and-ball assembly. Follow the companion repository
+if using those extensions; both projects share this sheet so the marker
+IDs do not collide.
 
-They belong to [forward-cam-umi](https://github.com/YosubShin/forward-cam-umi), an attempt to remove the wrist camera and
-make the glove entirely electronics-free. Without a wrist camera, the external
-forward camera has to recover both wrist pose and gripper width by itself, and
-that takes extra markers and printed parts: tails that ride on the gripper tips
-and stay visible when the tips themselves are occluded, and a reference marker
-holder on the back of the gripper to measure them against. Both projects share
-this sheet so the marker IDs never collide.
+### Measure and prepare the markers
 
-> **Print at 100% scale.** In the print dialog, choose *Actual size* and disable
-> *Fit to page*, *Shrink oversized pages*, and any scaling. A sheet printed at
-> 97% produces pose estimates that look plausible and are wrong by 3% in range —
-> a failure that will not announce itself.
+Print at **100% / Actual size** on matte paper or label stock, disabling
+all automatic scaling. Before cutting, check the 100 mm bar and take
+**six black-square measurements per group**, across different markers and
+alternating width and height. Average and record each group separately;
+the white border is the cutting boundary, not the measurement boundary.
+Enter the measured sizes in the unit's marker map and use the measured
+ball size in its calibration. See the assembly guide's
+[measurement procedure](../docs/assembly.md#measure-before-you-cut--every-marker-group).
 
-After printing, check the 100 mm bar with calipers before cutting anything out,
-then measure one marker's black square in each group you use and record that
-value in the config. This takes a minute and is the only check that catches a
-mis-scaled print. As the sheet notes, use matte paper for markers on faces that
-point up or down.
-
-Apply markers with double-sided tape across the **entire** face, not just the
-edges, so they cannot curl or lift. A marker that bows near an edge biases the
-corner detection that pose estimation depends on.
+Apply thin double-sided tape across the **entire back of the uncut marker
+region**, then cut through paper and tape together, preserving the white
+border. Bond every edge flat. Do not use glue, glossy paper, or tape over
+the printed face: curled edges and reflections interfere with corner
+detection. The same preparation applies to ball, finger, and extension
+markers.
 
 ### Marker placement is not prescribed
 
@@ -81,11 +86,12 @@ rather than becoming permanent error, and it means **your ball's mapping will
 differ from anyone else's** — the calibration output is specific to the physical
 unit you built and has to travel with it.
 
-<!-- TODO: point at the solver. Right now a reader has the hardware and the
-     marker sheet but no way to get from "ball with stickers on it" to a usable
-     pose stream. Either link the tool you used, name the off-the-shelf
-     equivalent, or write down the procedure and the output format. This is the
-     single biggest gap for anyone trying to reproduce the tracking. -->
+Follow [forward-cam-umi steps 2–6](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/README.md)
+for camera setup, intrinsics, a rotation take, detection, and ball geometry
+solving. Use the measured marker size and keep the solved geometry with
+that physical ball. Moving, re-sticking, or swapping a marker requires
+recalibrating it. The assembly guide summarizes the
+[camera and calibration sequence](../docs/assembly.md#the-forward-camera-mount-focus-calibrate-solve-the-ball).
 
 ### Measured performance
 
@@ -164,14 +170,17 @@ Hard-won caveats that travel with this camera class:
 
 #### Locking focus on the external camera
 
-**Lock the external camera's focus before collecting anything.** The Arducam is
-an autofocus module, and autofocus is actively harmful here: refocusing changes
-the effective focal length, which shifts the pose solution under a camera the
-calibration assumes is fixed. The result is drift that looks like tracking noise
-and is not.
+**Lock the external camera's focus before calibration and collection.**
+Refocusing changes the imaging parameters used by the pose solver.
 
-There is no hardware switch — set it through V4L2 on Linux. Control names differ
-across kernel and driver versions, so list them first:
+The **B0587** focuses mechanically: rotate the lens barrel while viewing the
+live meter in [focus_tune.py](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/focus_tune.py),
+then mark the barrel and leave it fixed. Its `focus_absolute` control can be
+accepted without changing focus; do not rely on that control for this module.
+
+For an **autofocus module such as the B0591** used in the earlier coverage
+measurement, disable autofocus and lock a fixed setting through V4L2 on Linux.
+Control names differ across kernel and driver versions, so list them first:
 
 ```
 v4l2-ctl -d /dev/video0 --list-ctrls
@@ -204,29 +213,25 @@ is replugged, so reapply them at the start of every session — or with a udev r
    hand-eye residual (4.8 mm) as the floor. Details and method in
    [`dynamic-accuracy.md`](dynamic-accuracy.md).
 
-<!-- TODO: publish the calibration procedure itself — how the bundle solve is run
-     and what it outputs — so someone else can reproduce these numbers rather than
-     just read them. -->
-
 ## Aperture markers
 
 Gripper aperture is read from AprilTag markers on the gripper tips, seen by the
-wrist fisheye camera. Because the wrist camera sees both tips in every frame, the
-gripper width can be solved at any moment and recorded alongside the video, so the
-training dataset carries the gripper width for every frame.
+wrist fisheye camera. Both tip markers must decode to obtain a metric
+aperture measurement for a frame; verify detection throughout opening and
+closing before recording. These markers are also needed when wrist pose
+comes from SLAM instead of the marker ball.
 
-`glove_markers_v4.pdf`, group *tips WRIST*: **6 mm AprilTag 16h5 markers on
-8 mm tiles, IDs 2 (A) and 3 (B)**, one per tip. They use a separate AprilTag
-family so they don't take IDs from the ArUco range. The markers have to stay
+`glove_markers_v4.pdf`, group *tips WRIST*: **AprilTag 16h5 markers with
+nominal 6 mm black squares on 8 mm tiles, IDs 2 (A) and 3 (B)**, one per tip.
+They use a separate AprilTag family so they don't take IDs from the ArUco range. The markers have to stay
 resolvable in the fisheye view, where the tips sit well off-axis and the
 effective resolution is much lower than the sensor's nominal figure suggests.
 
-The same 100% scale rule and full-face taping apply as for the ball markers
-above.
-
-Each marker sits **25 mm from the gripper base** — as far from the fisheye camera
-as the tip's flat area allows. The camera looks down at an angle, so distance from
-it moves the marker toward the centre of the frame and away from the distorted
-edge; the limit is mechanical, not optical, since the tip narrows and eventually
-offers no flat patch wide enough to seat a marker. See
-[assembly](../docs/assembly.md#4-aperture-markers).
+Measure and prepare the finger group separately using the procedure above.
+In the reference build, each marker sits on the **top of the finger,
+30 mm from its root**, facing the wrist camera. Keep the entire tile flat
+and both markers visible throughout the full opening. Check detection
+with [tag_contrast.py](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/tag_contrast.py).
+If repositioning a marker after calibration, repeat the affected geometry
+and aperture calibration. See the
+[assembly instructions](../docs/assembly.md#apply-the-gripper-tip-markers).
