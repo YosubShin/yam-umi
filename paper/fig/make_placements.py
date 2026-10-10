@@ -2,8 +2,8 @@
 """Fig. 4: the rollout placements over the forward camera's view.
 
 Each disc is one placement: the number inside is successes over all policies
-and repeats (n/10), the colour is how many of the five policies succeeded there
-at least once (red 0 .. green 5), and the arrow points to that scene's bin.
+and repeats (n/10), the colour encodes the same count (red 0 .. green 10), and
+the arrow points to that scene's bin.
 
   python fig/make_placements.py    # writes fig/placements.png
 """
@@ -25,8 +25,8 @@ im = cv2.imread(str(G / "scene2_ref.png"))[y0:y1, x0:x1].copy()
 im = cv2.addWeighted(im, 0.45, np.full_like(im, 255), 0.55, 0)   # washed-out background
 
 
-def col(k):  # k policies with >= 1 success -> red .. green (BGR)
-    t = k / 5
+def col(k):  # k successes of 10 -> red .. green (BGR)
+    t = k / 10
     return (int(40 + 40 * (1 - t)), int(60 + 180 * t), int(230 * (1 - t) + 30 * t))
 
 
@@ -35,8 +35,8 @@ for s, g in sorted(geo.items()):
     cv2.arrowedLine(im, tuple(b.astype(int)), tuple(c.astype(int)), (120, 120, 120), 2, cv2.LINE_AA, tipLength=0.04)
 for s, g in sorted(geo.items()):
     b = np.array(g["block"]) - [x0, y0]
-    k = sum(any(r["outcome"] == "success" for r in rs if r["scene"] == s and r["policy"] == n) for n in names)
     n_ok = sum(r["outcome"] == "success" for r in rs if r["scene"] == s)
+    k = n_ok
     n_all = sum(1 for r in rs if r["scene"] == s)
     cv2.circle(im, tuple(b.astype(int)), 34, col(k), -1, cv2.LINE_AA)
     cv2.circle(im, tuple(b.astype(int)), 34, (255, 255, 255), 2, cv2.LINE_AA)
@@ -45,9 +45,9 @@ for s, g in sorted(geo.items()):
     cv2.putText(im, txt, (int(b[0]) - tw // 2, int(b[1]) + th // 2), cv2.FONT_HERSHEY_SIMPLEX, 0.62, (255, 255, 255), 2, cv2.LINE_AA)
 
 # legend
-for i in range(6):
-    cv2.circle(im, (40 + i * 46, 36), 16, col(i), -1); cv2.putText(im, str(i), (33 + i * 46, 42), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-cv2.putText(im, "colour: policies (of 5) with a success here;  number: successes over all policies and repeats;  arrow: block -> bin",
+for i, k in enumerate(range(0, 11, 2)):
+    cv2.circle(im, (40 + i * 46, 36), 16, col(k), -1); cv2.putText(im, str(k), (30 + i * 46, 42), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+cv2.putText(im, "successes of 10 at the placement (all policies, both repeats);  arrow: block -> bin",
             (330, 42), cv2.FONT_HERSHEY_SIMPLEX, 0.52, (30, 30, 30), 1, cv2.LINE_AA)
 cv2.putText(im, "robot base", (20, 1020), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (30, 30, 30), 2, cv2.LINE_AA)
 cv2.imwrite(str(OUT), im)
