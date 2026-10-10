@@ -4,9 +4,9 @@ An open-source, hand-worn [UMI](https://umi-gripper.github.io/)-style data
 collection device for the **[I2RT YAM](https://i2rt.com/products/yam-6-dof-arm)
 arm's linear gripper**.
 
-> **Paper and video (CoRL 2026 UMI Arena workshop, device track):**
-> [YAM-UMI: A Fiducial-Tracked Glove that Collects Metrically Labelled Demonstrations for the YAM](paper/main.pdf) ·
-> [2.5-minute video](media/corl2026-umi-arena-track2.mp4) ·
+> **Paper and video:**
+> [YAM-UMI: A Fiducial-Tracked Glove that Collects Metrically Labelled Demonstrations for the YAM](paper/main.pdf) (preprint) ·
+> [2.5-minute video](media/yam-umi-paper-video.mp4) ·
 > [LaTeX source and figures](paper/)
 
 [![Glove collection demo with YAM-UMI and experimental tracking accessories](media/glove-collection-demo.jpg)](media/glove-collection-demo.mp4)
