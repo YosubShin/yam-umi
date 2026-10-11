@@ -9,19 +9,28 @@ arm's linear gripper**.
 > [2.5-minute video](media/yam-umi-paper-video.mp4) ·
 > [LaTeX source and figures](paper/)
 
-[![Glove collection demo with YAM-UMI and experimental tracking accessories](media/glove-collection-demo.jpg)](media/glove-collection-demo.mp4)
-
-*Watch the [glove collection demo](media/glove-collection-demo.mp4) (63 seconds,
-9.4 MB). This setup combines the YAM-UMI gripper with
-[forward-cam-umi](https://github.com/YosubShin/forward-cam-umi) marker tails,
-the optional dodecahedral wrist tracker, and a head-mounted camera.*
+<p align="center">
+  <img src="media/glove-on-hand.jpg" alt="YAM-UMI glove on a hand: the robot's gripper fingers on a printed body, the fiducial ball, marker cubes and the wrist fisheye" width="300">
+  <a href="media/glove-collection-demo.mp4"><img src="media/glove-collection-1p5x.gif" alt="Collecting a pick-and-place demonstration with the glove, 1.5x speed" width="480"></a>
+</p>
+<p align="center"><em>Left: the glove, with the robot's own gripper fingers, the fiducial ball, the marker cubes and the wrist fisheye.
+Right: one demonstration at 1.5× speed (click for the <a href="media/glove-collection-demo.mp4">full 63-second clip</a>).</em></p>
 
 <p align="center">
-  <a href="media/rollout-demo-1x-720p.mp4"><img src="media/rollout-demo-12x.gif" alt="YAM-UMI rollout demo at 12 times normal speed" width="480"></a>
+  <a href="media/yam-umi-paper-video.mp4"><img src="media/grid-eval-scene15-2x.gif" alt="Placement-grid evaluation: the same block position for four policies, 2x speed" width="560"></a>
 </p>
-<p align="center"><em>Rollout demo at 12× speed (full sequence, about 20 seconds).
-Watch the silent 720p video at <a href="media/rollout-demo-1x-720p.mp4">normal speed</a>
-or <a href="media/rollout-demo-6x-720p.mp4">6× speed</a>.</em></p>
+<p align="center"><em>Placement-grid evaluation on the YAM at 2× speed, one placement, four policies: teleop-only (top left),
+co-trained forward camera (top right), co-trained wrist camera (bottom left), half-teleop mix (bottom right).
+Continuous rollouts of a single policy: <a href="media/rollout-demo-1x-720p.mp4">normal speed</a> or <a href="media/rollout-demo-6x-720p.mp4">6× speed</a>.</em></p>
+
+| | |
+|---|---|
+| **Ergonomics** | 355 g on the hand with cable (318 g without), under half of UMI's 780 g; nothing to initialise |
+| **Dexterity** | the YAM gripper's tasks (parallel-jaw pick, place, insert); 0–75 mm opening with the robot's own fingers |
+| **Strength** | 1 kg by a jug handle, 1.5 kg slips, 2 kg no (the robot: 1.5 kg / 2 kg); MGN9 rails, no wear in a month |
+| **Labels** | absolute 6-DoF pose and jaw width every frame from printed fiducials; 7.7 mm / 1.7° median against the robot's kinematics |
+| **Reproducibility** | hardware and software open; one two-plate print, 7 purchased parts; three units built, one by others |
+| **Cost** | $79 per glove ($22 without the wrist camera); $122 of shared rig; about $200 per system vs UMI's $371 |
 
 YAM-UMI is deliberately built for one arm.
 It mirrors the YAM linear gripper's jaw geometry, reuses the YAM wrist camera
