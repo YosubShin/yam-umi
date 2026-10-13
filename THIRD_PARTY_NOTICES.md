@@ -18,7 +18,7 @@ the deployed robot.
 **Scope of what is derived.** I2RT's plate CAD is supplied as a single merged
 mesh, so it provides overall form but no separable components. Everything in this
 repository that is not the camera mount interface or the cable retainer was drawn
-from scratch — `plate_v6`, `adapter_v10`, `L_bracket_v4`, `handle_v14`, the pinion
+from scratch — `plate_v6`, `adapter_v11`, `L_bracket_v4`, `handle_v14`, the pinion
 variants, and all of `pos-tracking/` are original work, dimensioned either
 independently or by measuring the physical robot. The derived content is the
 mounting geometry needed to make the camera pose and jaw interface match, not the

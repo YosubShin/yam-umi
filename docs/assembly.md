@@ -15,7 +15,7 @@ The photo below shows the gripper with its wrist camera and optional marker ball
 | Name | Shape and function | File or source | Quantity per assembly |
 |---|---|---|---:|
 | Base plate | H-shaped plate supporting the rails and central pinion | `plate_v6` | 1 |
-| Rack adapter | Rectangular block with teeth along one edge, connecting the carriage to the gripper-finger assembly | `adapter_v10` | 2 |
+| Rack adapter | Rectangular block with teeth along one edge, connecting the carriage to the gripper-finger assembly | `adapter_v11` | 2 |
 | Central pinion | Meshes with both racks to couple their motion | `pinion_z18_deep_v0` through `v3`; install one variant | 1 |
 | L bracket | Connects the gripper finger, handle, and rack adapter | `L_bracket_v4` | 2 |
 | Finger handle | Curved finger cradle with a strap opening | `handle_v14` | 2 |
@@ -80,6 +80,11 @@ The opposite face has four visible M3 inserts. In the orientation shown below, t
 1. Place the two rails in their mounting positions on either side of the base plate, parallel to each other, with the carriage mounting faces upward.
 2. Align the rail holes with the mounting holes in the base plate. Use two screws per rail, positioned as shown below. Start the screws, then tighten them gradually until the rails sit flush against the plate.
 3. Keep the rail end stops in place during assembly to prevent a carriage from sliding off the rail and shedding its ball bearings.
+
+**Keep the rubber end caps intact.** The `adapter_v11` jaw adapter has no boss,
+so it clears the rail's rubber end caps without trimming. Do not cut or remove
+the caps: they stop the carriage from running off the end of the rail and
+shedding its ball bearings. The older adapter required trimming the caps.
 
 ![Both rails and carriages installed](../media/assembly/rails-installed.jpg)
 
