@@ -1,7 +1,8 @@
 \documentclass{article}
 
-% CoRL 2026 workshop "The UMI Arena", Track 3 (UMI-themed paper). Page limit ASSUMED to be the
-% device track's 4 pages + references; check the track's CFP before submission. 'preprint' shows authors.
+% CoRL 2026 workshop "The UMI Arena", Track 3 (contributed papers): 2-4 pages EXCLUDING acknowledgements
+% and references, CoRL main-conference format, single-blind, OpenReview. Topics hit: in-the-wild tracking
+% beyond SLAM; the egocentric viewpoint gap between collection and deployment; data scaling/curation.
 \usepackage[preprint]{corl_2026}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -45,7 +46,7 @@ A UMI-style glove needs a label for every frame and a camera for the policy. We 
 %===============================================================================
 \section{The idea}
 \label{sec:idea}
-Our earlier glove \citep{yamumi2026} was tracked by a fixed 4K camera over the workspace, which gives absolute labels but ties collection to a tripod and loses the ball whenever the collector's body comes between camera and hand. The workshop's question is what a UMI should look like when it is cheap, deployable and gives the policy the right observation. Our answer is to let the label camera be worn: the collector's head follows the hand by habit, keeps the gripper roughly centred and roughly at arm's length, and is never occluded by the collector's own torso. The world frame that a fixed camera provided for free is replaced by printed AprilTag tiles taped on the table, which cost nothing, survive being nudged, and are solved in every frame that shows one. The same camera then becomes the policy's observation. On the robot a small six-joint arm (an SO-101) carries it and imitates the head: it keeps the gripper where the collector's head kept the hand, from the robot's joint state alone, identically during teleoperation and during rollouts. Nothing in the pipeline depends on a fixed camera; one was kept only as an ablation.
+Our earlier glove \citep{yamumi2026} was tracked by a fixed 4K camera over the workspace, which gives absolute labels but ties collection to a tripod and loses the ball whenever the collector's body comes between camera and hand. Two of the open problems this workshop names are in-the-wild tracking that does not rest on SLAM, and the viewpoint gap between what a handheld device records and what the robot sees. We address both with one camera. Our answer is to let the label camera be worn: the collector's head follows the hand by habit, keeps the gripper roughly centred and roughly at arm's length, and is never occluded by the collector's own torso. The world frame that a fixed camera provided for free is replaced by printed AprilTag tiles taped on the table, which cost nothing, survive being nudged, and are solved in every frame that shows one. The same camera then becomes the policy's observation. On the robot a small six-joint arm (an SO-101) carries it and imitates the head: it keeps the gripper where the collector's head kept the hand, from the robot's joint state alone, identically during teleoperation and during rollouts. Nothing in the pipeline depends on a fixed camera; one was kept only as an ablation.
 
 %===============================================================================
 \section{System}
