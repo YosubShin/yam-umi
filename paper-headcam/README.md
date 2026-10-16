@@ -1,0 +1,137 @@
+# Track 3 draft: head-camera labelling of glove demonstrations
+
+Reader's guide for the first draft (`main.tex`, built `main.pdf`). Target: CoRL 2026 workshop
+"The UMI Arena", Track 3 contributed papers, 2-4 pages excluding references, CoRL format,
+single-blind, OpenReview. Due **16 Oct 2026**.
+
+Build: `latexmk -pdf main.tex` in this directory (then `latexmk -c`).
+Red text = placeholder or open question. Blue text = a number that comes from the rollout grid
+still running on the robot (25 scenes per arm; 14 done at the time of writing).
+
+## The system in five lines
+
+1. The glove is the fiducial-tracked YAM gripper replica from the device-track paper (`../paper`).
+2. The collector wears one 4K camera. It sees the fiducial ball on the glove, the jaw tags, and
+   four printed AprilTag tiles taped around the workspace. Every frame gives camera pose (tiles),
+   gripper pose (ball) and jaw width (tags) from that one image. No fixed camera, no IMU, no SLAM.
+3. On the robot a six-joint SO-101 arm carries the same camera and keeps the gripper in view the
+   way the collector's head kept the hand in view, from the robot's joint state alone. Teleop data
+   and rollouts both go through it, so training and deployment share one viewpoint distribution.
+4. A fixed external camera exists in the rig only as an ablation (it is how the device-track paper
+   labelled the glove).
+5. Policies are ACT, one recipe, joint-space actions, best checkpoint by validation loss on 6
+   held-out teleoperated episodes.
+
+## The eight policies on the robot
+
+Every arm's teleop half carries the robot's encoder labels; only the glove half carries the
+camera under test. Same 198 glove demonstrations in every mix. "val" = ACT loss on the 6
+held-out teleoperated episodes, encoder targets, comparable across all rows.
+
+| # | arm (code name) | what it is | glove labels | policy camera | training data | val |
+|---|---|---|---|---|---|---|
+| 1 | head_Hgt | teleop only, full budget | - | head cam | 172 teleop | 0.318 |
+| 2 | mix_gHs3 | **the device** | head cam | head cam | 172 teleop + 194 glove segments | **0.263** |
+| 3 | head_Hgt48 | teleop only, low budget | - | head cam | 48 teleop | 0.464 |
+| 4 | mix_gHs3_48 | device, low budget | head cam | head cam | 48 teleop + 194 glove | 0.295 |
+| 5 | mix_FA | conventional wrist-cam UMI | fixed cam | wrist fisheye | 168 teleop + 253 glove | 0.257 |
+| 6 | head_HH | teleop labelled by the head cam, no encoders | - | head cam | 172 teleop | 0.328 |
+| 7 | mix_FB | fixed camera as the whole system | fixed cam | fixed cam | 172 teleop + 255 glove | 0.256 |
+| 8 | mix_gHA | head labels on the wrist view | head cam | wrist fisheye | 168 teleop + 192 glove | 0.252 |
+
+Notes. Arms 5 and 8 have 168 teleop episodes because the wrist recording has gaps in four.
+Arms 5 and 7 have more glove *segments* but 10% fewer glove *frames* (43.5k vs 48.5k): the fixed
+camera loses the gripper behind the collector's body, those stretches are cut, and the episodes
+fragment. Arm 6 is scored on the encoder targets too (its own-chain loss is 0.282).
+
+## Preliminary rollout tally (14 of 25 scenes, 112 trials, 16:16 on 16 Oct)
+
+Protocol: 25 block placements, each placed once and then re-placed to a saved reference image
+(ghost alignment) for every other arm; arm order shuffled per scene; 60 s budget; outcome scored
+by the operator (success / no grasp / dropped before bin / dropped at bin / timeout).
+
+| # | arm | success | median time to success | failures |
+|---|---|---|---|---|
+| 1 | teleop only 172 | 12/14 | 15.2 s | 2 no-grasp |
+| 2 | **device** 172 + glove | 12/14 | 15.3 s | 2 no-grasp |
+| 3 | teleop only 48 | 7/14 | 16.7 s | 7 no-grasp |
+| 4 | device 48 + glove | 12/14 | 17.3 s | 2 no-grasp |
+| 5 | wrist-cam UMI | 9/14 | 18.5 s | 2 no-grasp, 3 dropped |
+| 6 | head-cam teleop labels | 10/14 | 19.1 s | 4 no-grasp |
+| 7 | fixed camera system | 8/14 | 17.4 s | 5 no-grasp, 1 dropped |
+| 8 | head labels, wrist view | 8/14 | 15.0 s | 1 no-grasp, 5 dropped |
+
+Resolution: at 25 trials the binomial 95% interval is about +/-18 points, so two arms need to
+differ by roughly 5 trials to be worth a sentence.
+
+## The stories, in the order the paper tells them
+
+1. **One worn camera labels the glove in the wild.** Tiles replace the fixed camera as the world
+   frame; single-tile frames are chained; blind stretches are cut rather than losing the episode.
+   Numbers (final): 0.7-7.4% of frames cut per session vs 8-22% for the fixed camera; tool-point
+   label error vs the robot's encoders 6.5 mm median / 14.1 mm p90, 1.55 deg; a policy trained on
+   head-cam labels instead of encoders pays 3% in validation loss (0.328 vs 0.318), where the
+   fixed-camera glove paid 14% in the device paper.
+2. **Glove data stretches a small teleop budget.** Offline: the 194 glove segments are worth
+   65-100 teleop episodes (2-3 glove demos per teleop demo); 48 teleop + glove lands between 96
+   and 172 teleop alone. Robot (preliminary): 7/14 -> 12/14 at the 48 budget, every teleop-only
+   failure a no-grasp. The gain shrinks with budget: at full budget the device and teleop-only are
+   tied, which is the task ceiling (about 85%), not a failure of the glove data.
+3. **The same camera on the robot closes the viewpoint gap.** Teleop and rollouts see what the
+   collector saw. The positioner is driven from joint state only, identically in both.
+4. **Which camera, and why.** Offline all four co-trained arms (2, 5, 7, 8) are within 0.011, so
+   the loss does not separate cameras. On the robot the failure modes do: head-view arms fail only
+   by never grasping; wrist-view arms drop the block during the carry, and every observed drop
+   happened while the bin was outside the fisheye's view. Arm 8 vs 2 isolates the observation
+   (same labels); arm 8 vs 5 isolates the label source (same observation); arm 7 asks whether a
+   moving camera is needed at all.
+
+## What we can already say safely (14 scenes)
+
+- Head-camera labels are as good as encoders for training (arm 6 vs 1, offline 3%, robot
+  10/14 vs 12/14).
+- Glove data recovers the low-budget teleop policy (arm 4 vs 3: 12/14 vs 7/14). This is the
+  headline robot result and it matches the offline curve.
+- At full budget co-training does no harm (arm 2 vs 1: 12/14 vs 12/14).
+- Wrist-view policies fail by dropping; head-view policies fail by not grasping. The direction of
+  the camera comparison (head > wrist, fixed) is visible but not yet significant.
+
+## What waits for the final count
+
+- Arms 2 vs 5 vs 7 vs 8 success rates (the camera comparison).
+- Whether arm 8 (head labels, wrist view) beats arm 5 (fixed labels, wrist view): the label-source
+  effect on the standard UMI observation.
+- Arm 7's placement in the ranking, with its caveat (below).
+
+## Caveats to keep in the text
+
+- The fixed camera was mounted low because the positioner occupied the high vantage point; its
+  occlusion rate (8-22%) is an upper bound for a fixed camera in this workspace. Arm 8 is the
+  control that does not depend on the mount height.
+- Tile layout was refit from one session by median single-tile poses, not bundle-adjusted.
+- Positioner lag about 0.4 s; joint limits on the largest sweeps.
+- Appearance gap: the head cam sees the collector's arm and the glove's fingers; glove-only
+  policies do not transfer (val 0.52 vs 0.26 co-trained), as in the device paper.
+- 25 trials per arm; one seed per policy.
+
+## Anecdotes (operator notes, `~/co/pilot/rollout_logs/grid_20261016/anecdotes.md`)
+
+- Scene 5, low budget: teleop-only could not close in on the block; the mix missed its first
+  grasp, backed off, re-grasped and succeeded.
+- Scene 5, arm 8: opened the gripper mid-carry with the block out of the wrist camera's view.
+- Wrist-view arms drop when the wrist view is looking away from the bin; the converse was never
+  seen.
+
+## Where help is wanted (Igor)
+
+- Citations and one or two background sentences in Section 1: SLAM/IMU tracking in UMI-style
+  devices vs fiducial or marker-based localisation; prior work that moves a robot-side camera to
+  match a human viewpoint (active perception, head-mounted or arm-mounted cameras); the
+  egocentric viewpoint gap literature. No related-work section is planned; clauses in place.
+- Tone of the limitations paragraph and the "what is next" sentence.
+- Anything in the system section that is unclear to a reader who has not seen the rig.
+- The red `\todo` items: how the camera is worn (mount, weight), teaser figure, placements figure.
+
+Repository layout: `main.tex`, `refs.bib` (shared with the device paper), `fig/make_budget.py`
+regenerates `fig/budget.pdf` from `~/co/pilot/e8/head_val_curves.csv`. The device-track paper is
+in `../paper` and is the reference for style and length.
