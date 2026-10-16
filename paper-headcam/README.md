@@ -64,6 +64,15 @@ by the operator (success / no grasp / dropped before bin / dropped at bin / time
 Resolution: at 25 trials the binomial 95% interval is about +/-18 points, so two arms need to
 differ by roughly 5 trials to be worth a sentence.
 
+## The one-line story
+
+The provocative version: a head camera is all a UMI needs. The defensible version: one egocentric
+moving camera replaces the wrist camera *and* the pose tracker (SLAM, IMU, VR controller, fixed
+base camera), and the policy is as good. What it buys: no electronics in the glove at all, since
+fiducials give pose and jaw width from the head cam's view. What it costs: a moving camera at
+deployment. The mitigation: a cheap servo-driven printed camera arm was shown to work, and its
+viewpoint model is a naive linear fit on one glove session, so the numbers here are a floor.
+
 ## The stories, in the order the paper tells them
 
 1. **One worn camera labels the glove in the wild.** Tiles replace the fixed camera as the world
