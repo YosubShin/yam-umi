@@ -70,7 +70,7 @@ The provocative version: a head camera is all a UMI needs. The defensible versio
 moving camera replaces the wrist camera *and* the pose tracker (SLAM, IMU, VR controller, fixed
 base camera), and the policy is as good. What it buys: no electronics in the glove at all, since
 fiducials give pose and jaw width from the head cam's view. What it costs: a moving camera at
-deployment. The mitigation: a cheap servo-driven printed camera arm was shown to work, and its
+deployment. The mitigation: a cheap servo-driven printed camera arm (SO-101 follower, about $120 in parts; glove $22, camera $122) was shown to work, and its
 viewpoint model is a naive linear fit on one glove session, so the numbers here are a floor.
 
 ## The stories, in the order the paper tells them
