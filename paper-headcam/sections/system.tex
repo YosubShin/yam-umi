@@ -44,5 +44,5 @@ Teleoperation under the head-camera positioner produced 178 episodes (38.6k fram
 Four glove sessions yielded 198 demonstrations, resulting in 200 segments after blind cutting (50.0k frames, 6 held out).
 All policies use Action Chunking with Transformers (ACT) \citep{zhao2023act} trained through LeRobot \citep{lerobot2024} for 50k steps with joint-space actions, selecting the best checkpoint by validation loss on the held-out teleoperated episodes.
 Following \citet{yamumi2026}, glove timelines are resampled to teleoperation pace and measured widths are mapped into the robot's gripper command space.
-Crucially, anchoring the closed-grasp state to the teleoperators' minimum commanded squeeze (0.22 of full stroke, rather than the 0.25 median) ensures firm grasp transfer, completely eliminating mid-carry block drops across all head-view policies.
+Crucially, anchoring the closed-grasp state to the teleoperators' minimum commanded squeeze (0.22 of full stroke, rather than the 0.25 median) ensures firm grasp transfer: the head-view policies released no block during the carry in 120 rollouts (one slip at lift-off).
 
