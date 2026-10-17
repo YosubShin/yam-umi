@@ -141,6 +141,9 @@ viewpoint model is a naive linear fit on one glove session, so the numbers here 
 - Anything in the system section that is unclear to a reader who has not seen the rig.
 - The red `\todo` items: how the camera is worn (mount, weight), teaser figure, placements figure.
 
-Repository layout: `main.tex`, `refs.bib` (shared with the device paper), `fig/make_budget.py`
+Repository layout: `main.tex` (preamble, title, teaser figure, bibliography) pulls in one file per
+section from `sections/` (`abstract`, `idea`, `system`, `experiments`, `limitations`), so edit the
+text there. `resources/venue.md` records the venue rules and dates. `refs.bib` (shared with the
+device paper), `fig/make_budget.py`
 regenerates `fig/budget.pdf` from `~/co/pilot/e8/head_val_curves.csv`. The device-track paper is
 in `../paper` and is the reference for style and length.
