@@ -4,7 +4,8 @@ Reader's guide for the first draft (`main.tex`, built `main.pdf`). Target: CoRL 
 "The UMI Arena", Track 3 contributed papers, 2-4 pages excluding references, CoRL format,
 single-blind, OpenReview. Due **16 Oct 2026**.
 
-Build: `latexmk -pdf main.tex` in this directory (then `latexmk -c`).
+Build: `latexmk -pdf main.tex` in this directory (then `latexmk -c`). Layout: `sections/` are the 4-page
+versions, `sections/appendix.tex` follows the references, `sections/full/` holds the pre-cut text.
 Red text = placeholder or open question. Blue text = a number that comes from the rollout grid
 still running on the robot (25 scenes per arm; 19 done at the time of writing).
 
@@ -144,7 +145,9 @@ viewpoint model is a naive linear fit on one glove session, so the numbers here 
   and on the NAS at `yam-umi-media/originals/`; the rollout one (8 min, all arms on one scene) is supplementary-video material.
 - Two `\todo{confirm}` in limitations (one collector; remote-workspace calibration), how the camera
   is worn (system), which hand-eye solver (system), keep-or-cut on fig:rollouts.
-- Length: 9 pages with references at 21:50 on 16 Oct against a 4-page body limit. Not trimmed yet.
+- Length: cut to 4 pages of body at 22:50 on 16 Oct (references on p.5, appendix A-C with the budget curve,
+  placements map and rollout strip on p.7-8). The full-length sections are kept in `sections/full/` for
+  reference and for the camera-ready; nothing was deleted, only moved to the appendix or condensed.
 
 ## Caveats to keep in the text
 

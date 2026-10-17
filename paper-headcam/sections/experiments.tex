@@ -1,23 +1,13 @@
 \section{Experiments}
 \label{sec:results}
 
-\paragraph{Experimental design.}
-To evaluate our system, we compare eight policy configurations (Table~\ref{tab:arms}) spanning three visual viewpoints: the active head camera, a wrist-mounted fisheye, and a static external camera.
-In all co-trained conditions, teleoperated demonstrations use robot joint encoders for action labels, while human glove demonstrations are labelled by the head camera (unless specified otherwise for ablation).
-During teleoperation, the operator viewed the real-time head-camera preview, and all three cameras recorded the demonstrations concurrently; the policies thus share identical demonstration trajectories and differ strictly in observation, with demonstration style shaped by the head-camera view.
-Table~\ref{tab:arms} lists the eight arms.
-All glove-based arms train on the same 198 demonstrations.
-Arms 1--4 evaluate the scaling benefit of co-training human glove demonstrations across two teleoperation budgets: full (172 episodes) and low (48 episodes).
-Arm 6 isolates head-camera labelling accuracy by training on teleoperation episodes labelled via the head camera rather than motor encoders.
-Arms 5, 7, and 8 evaluate camera vantage points.
-Arm 5 replicates the standard wrist-camera UMI paradigm \citep{chi2024umi} using a wrist fisheye mounted to the glove for this ablation only, whereas the head-view arms use the glove with no electronics.
-Arm 7 evaluates a static external camera, training on \SI{10}{\percent} fewer glove frames (43.5k vs.\ 48.5k) due to human body occlusions.
-Arm 8 pairs head-camera labels with wrist-camera visual observations, isolating visual perspective from label quality.
+\paragraph{Design.}
+Eight policies (Table~\ref{tab:arms}) span three views: the head camera, a wrist fisheye and a fixed external camera. Teleoperated actions come from the encoders except in arm 6, and glove labels from the head camera unless stated. The teleoperator watched the head-camera preview and all three cameras recorded every episode, so the arms share demonstration trajectories and differ only in observation and data composition. Arms 1--4 test co-training at two teleoperation budgets (172 and 48 episodes); arm 6 tests head-camera labels in place of encoders; arms 5, 7 and 8 test the view: arm 5 is the wrist-camera UMI recipe \citep{chi2024umi} with a fisheye added to the glove for this ablation only, arm 7 a fixed camera (\SI{10}{\percent} fewer glove frames to body occlusion), and arm 8 head labels on the wrist view, separating the view from the labels.
 
 \begin{table}[t]
   \centering
   \footnotesize
-  \caption{The eight experimental policy variants. Teleoperated actions use robot joint encoders, except Arm 6 which evaluates vision-based labels. Validation loss (ACT loss) is measured on 6 held-out teleoperated episodes with ground-truth encoder targets across all rows. Real-world rollouts: 25 randomized block placements, one trial each (\SI{60}{s} budget); failure modes denote $n$ = no grasp, $d$ = dropped before bin, $b$ = dropped at bin, $t$ = timeout.}
+  \caption{The eight policies. Teleop labels are encoders except arm 6. Val = ACT loss on 6 held-out teleoperated episodes with encoder targets. Rollouts: 25 placements, one trial each, \SI{60}{s} budget; $n$ = no grasp, $d$ = dropped before the bin, $b$ = dropped at the bin, $t$ = timeout.}
   \label{tab:arms}
   \setlength{\tabcolsep}{4pt}
   \begin{tabular}{clllcccl}
@@ -37,54 +27,10 @@ Arm 8 pairs head-camera labels with wrist-camera visual observations, isolating 
 \end{table}
 
 \paragraph{Label accuracy.}
-We first evaluate the tracking accuracy of the head camera against robot encoder ground truth by mounting the fiducial ball directly onto the YAM arm.
-Across 5,065 frames (\SI{91}{\percent} inlier rate), the head-camera pipeline estimates tool-point position with \SI{6.5}{mm} median error (\SI{14.1}{mm} 90th percentile) and orientation within \SI{1.55}{\degree} median (\SI{2.70}{\degree} p90), after the calibrated base transform absorbs static mounting offsets.
-Jaw width estimation was similarly verified across 112 teleoperated episodes (24.6k frames).
-Visual width tracking achieves a median error of \SI{3.5}{\percent} of stroke (\SI{7.9}{\percent} p90, corresponding to \SI{3}{mm} and \SI{7.5}{mm} of the \SI{95}{mm} stroke), tightening to \SI{2.3}{\percent} median error in the closed state that decides a grasp.
-The width labels exhibit zero frame lag against motor commands (artificially shifting by one frame strictly raises the error) and achieve full per-frame coverage in 9 out of 10 episodes (lowest: \SI{68}{\percent}).
-Accuracy remains uniform across operating conditions: across bins divided by workspace quadrant, camera distance (\SI{0.4}{}--\SI{0.8}{m}), elevation angle (\SI{40}{}--\SI{87}{\degree}), and jaw aspect angle, median error stays between \SI{2.8}{}--\SI{4.8}{\percent} (\SI{6.8}{}--\SI{8.5}{\percent} p90), rising slightly only when viewing perpendicular to the jaw travel axis.
-The remaining residual is a systematic \SI{4}{}--\SI{6}{\percent} under-read at maximum aperture, representing a scale error of the per-session fit (evaluated with alternate-frame holdout) rather than measurement noise; by comparison, the fixed workspace camera in \citet{yamumi2026} measured the same gripper with \SI{4.4}{\percent} median error and \SI{94}{\percent} coverage.
-Downstream policy training confirms that this perceptual accuracy is sufficient for robust imitation learning: training on head-camera visual labels instead of encoders (Arm 6 vs.\ Arm 1), scored on the same encoder-labelled held-out episodes, incurs only a \SI{3}{\percent} increase in validation loss (0.328 vs.\ 0.318) and a rollout success within the noise of 25 trials (15/25 vs.\ 18/25; 5 placements won to 8 lost on the same scenes, exact McNemar $p = 0.58$).
+With the ball on the YAM and the encoders as reference, the chain places the tool point within \SI{6.5}{mm} median (\SI{14.1}{mm} p90) and \SI{1.55}{\degree} (\SI{2.70}{\degree}) over 5\,065 frames. The jaw width, checked on 112 teleoperated episodes (24.6k frames), is within \SI{3.5}{\percent} of stroke at the median (\SI{7.9}{\percent} p90), \SI{2.3}{\percent} in the closed state that decides a grasp, with no lag and a label on every frame in 9 of 10 episodes; the error is flat over workspace, distance, elevation and viewing angle (\SI{2.8}{}--\SI{4.8}{\percent} median per bin; App.~\ref{app:width}). A policy trained on these labels instead of encoders (arm 6 against arm 1), scored on the same encoder-labelled held-out episodes, loses \SI{3}{\percent} in validation loss (0.328 against 0.318) and is within noise on the robot (15/25 against 18/25; 5 placements won to 8 lost, exact McNemar $p = 0.58$).
 
 \paragraph{Co-training and the teleoperation budget.}
-Following established precedents in co-training across heterogeneous embodiments—such as mixing static and mobile manipulation data \citep{fu2024mobilealoha} or combining human demonstration video with robot data \citep{kareer2025egomimic}—we train unified policies on merged human glove and robot teleoperation datasets.
-Adding the 194 human glove demonstrations to all 172 teleoperated demonstrations reduces validation loss on held-out robot episodes from 0.318 to 0.263, a \SI{17}{\percent} relative improvement (Arm 2 vs.\ Arm 1).
-When teleoperation data is scarce, co-training yields an even larger gain: adding glove demonstrations to 48 teleoperated episodes cuts validation loss from 0.464 to 0.295 (Arm 4 vs.\ Arm 3).
-As shown in Fig.~\ref{fig:budget}, log-linear interpolation of the teleoperation-only loss curve demonstrates that the glove dataset provides the equivalent benefit of 65--100 additional teleoperated episodes, achieving an effective exchange rate of 2--3 human demonstrations per teleoperated episode.
-At the 48-episode budget, co-training saves 50--120 episodes of robot teleoperation, lifting performance to that of 96--172 teleoperation-only episodes.
-Although the marginal reduction diminishes as the base teleoperation budget grows (a 0.075 loss drop at 24 teleoperated episodes down to 0.011 at 96 episodes, measured against the full mix), glove data effectively stretches a small teleoperated set, though it does not replace the last few dozen teleoperated demonstrations.
-In physical robot rollouts, the 48-episode co-trained model succeeds in 17/25 trials, outperforming the 48-episode teleoperation baseline (10/25; 9 placements won to 2 lost, $p = 0.065$) and matching the full 172-episode model (18/25; 4 to 5, tied). Every failure of the two 48-episode arms is a missed grasp, and the difference lies in recovery: in Scene 5, the co-trained policy missed its initial grasp, backed away, and successfully re-grasped, whereas the teleoperation-only policy never closed in.
+Co-training across sources has precedent \citep{fu2024mobilealoha,kareer2025egomimic}. Adding the 194 glove segments to 172 teleoperated episodes lowers the robot-validation loss from 0.318 to 0.263 (arm 2 against 1); added to 48 episodes, from 0.464 to 0.295 (arm 4 against 3). By log-linear interpolation of the teleop-only curve (Fig.~\ref{fig:budget}) the glove set is worth 65--100 teleoperated episodes, 2--3 glove demonstrations per teleoperated one, and the 48-episode mix lands at the level of 96--172 teleoperated episodes; the gain shrinks with budget (0.075 at 24 episodes, 0.011 at 96), so glove data stretches a small teleoperated set rather than replacing the last few dozen. On the robot the 48-episode mix succeeds in 17/25 against 10/25 for 48 teleoperated episodes alone (9 placements won to 2 lost, $p = 0.065$) and 18/25 for all 172 (4 to 5). Every failure of both 48-episode arms is a missed grasp; the difference is recovery: in scene 5 the mix missed, backed off and re-grasped where the teleop-only policy never closed in.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.6\linewidth]{fig/budget.pdf}
-  \caption{Robot validation loss versus the number of teleoperated demonstrations, with and without 194 co-trained human glove segments. Solid curve: head-camera-labelled teleoperation (intermediate pipeline, four data budgets); dashed curve: encoder-labelled teleoperation (final system, two data budgets). Supplementing teleoperation with glove demonstrations matches the validation loss of 2--4$\times$ as many teleoperated episodes.}
-  \label{fig:budget}
-\end{figure}
-
-\paragraph{Vantage point comparison.}
-Offline validation loss across the four co-trained camera configurations (Arms 2, 5, 7, and 8) falls within a narrow 0.011 band (0.252--0.263), with each gaining 0.04--0.06 over its teleoperation-only counterpart.
-Because offline validation loss is known to correlate weakly with physical rollout success \citep{mandlekar2021robomimic}, real-world rollouts reveal the differences: Arm 2 (head camera) succeeds in 20/25 trials, the wrist-camera baseline (Arm 5) in 15/25, the fixed camera (Arm 7) in 12/25, and head labels on the wrist view (Arm 8) in 14/25. On the shared placements the head camera wins 6/1, 11/3 and 8/2 against them ($p = 0.13$, $0.06$ and $0.11$); no single pair clears $0.05$ at 25 placements, but no arm beats Arm 2 on more than three.
-Failure modes diverge fundamentally by camera vantage point: head-camera policies almost always fail by never grasping, whereas wrist-camera policies frequently fail by dropping the grasped object mid-carry ($d+b = 12$ of $21$ failures for Arms 5 and 8, 7 of 11 for Arm 8 alone, compared to $1$ of $45$ for the head-camera Arms 1--4 and 6, and 1 of 13 for the fixed camera).
-As illustrated in Fig.~\ref{fig:rollouts}, this behavior is tied to visual context: in the operator's notes every wrist-view drop occurred while the fisheye was looking away from the receptacle bin during transport, and none while the bin remained visible; the single head-camera drop (Arm 1, Scene 22) occurred immediately after lift-off with both gripper and bin in frame, a slip rather than a release.
-Because the head camera tracks the hand from an elevated vantage point, it maintains both the gripper and the target bin within a single coherent field of view throughout the carry.
-Controlling for visual observation (Arm 8 vs.\ Arm 5) isolates label quality: using head-camera labels rather than external camera labels yields 14/25 against 15/25 (2 placements to 3), so on the wrist view the two label sources are indistinguishable.
-Conversely, controlling for label source (Arm 8 vs.\ Arm 2) isolates viewpoint: replacing head-camera observation with wrist-camera observation drops success from 20/25 to 14/25 and converts the no-grasp failures into mid-carry drops (7 of Arm 8's 11 failures).
-Finally, the static camera (Arm 7) achieved the lowest success of the four co-trained views, 12/25, failing like the head camera by not grasping (12 of 13 failures) but more often; because the active positioner occupied the optimal elevated vantage point, the fixed camera was positioned lower, making its \SI{10}{\percent} occlusion rate an upper bound for static views in this workspace.
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.58\linewidth]{fig/placements.png}
-  \caption{Physical rollout evaluation protocol across 25 randomized workspace placements. For each placement, target blocks are repositioned to identical reference coordinates across policy evaluations using visual ghost alignment (\SI{60}{s} trial budget; execution order randomized per scene). Each disc indicates outcomes across the eight policy arms; the arrow denotes receptacle direction.}
-  \label{fig:placements}
-\end{figure}
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\linewidth]{fig/rollouts.jpg}
-  \caption{Rollout sequence for Scene 16 across the four camera conditions at $t = 2, 6, 10,$ and \SI{14}{s}, captured from the external workspace camera with policy visual inputs shown inset. During object transport, the wrist fisheye (rows 2 and 4) captures only the grasped block and distant wall, losing sight of the destination bin. In contrast, the head camera (row 1) maintains both the gripper and bin within a single frame, preventing premature release. \todo{Keep or cut for space; fig/make\_rollouts.py regenerates for any scene from 15 on.}}
-  \label{fig:rollouts}
-\end{figure}
-
-\paragraph{Qualitative observations.}
-In Scene 5, Arm 8 (head labels on the wrist view) released the block mid-transport with the block outside its view, as if it no longer registered the object in hand; Arm 5 shows the same pattern in its three mid-carry drops. Head-camera arms that fail do so before contact, by stopping short of the block or closing beside it, and then hold position until the budget expires; they do not release a block once lifted (one slip in 120 trials). Median time to success is \SI{16}{}--\SI{19}{s} for every arm, so the cameras differ in whether the task completes, not in how fast.
+\paragraph{Which camera.}
+Offline the four co-trained views (arms 2, 5, 7, 8) sit within 0.011 of each other (0.252--0.263), and offline loss is a weak proxy for rollouts \citep{mandlekar2021robomimic}. The rollouts separate them: head camera 20/25, wrist fisheye 15/25, fixed camera 12/25, head labels on the wrist view 14/25. On shared placements the head camera wins 6/1, 11/3 and 8/2 against them ($p = 0.13$, $0.06$, $0.11$), so no pair clears $0.05$ at 25 placements, but no arm beats arm 2 on more than three. The failure modes split by view: head-camera policies fail by never grasping, wrist-camera policies by dropping the block mid-carry (12 of the 21 failures of arms 5 and 8, against 1 of 45 for the head-camera arms, a slip at lift-off). In the operator's notes every wrist-view drop came while the fisheye looked away from the bin and none with the bin in view (Fig.~\ref{fig:rollouts}); the head camera keeps gripper and bin in one frame through the carry. Same view, other labels (arm 8 against 5): 14/25 against 15/25, indistinguishable. Same labels, other view (8 against 2): 20/25 falls to 14/25 and the no-grasps become drops. The fixed camera (arm 7) is the weakest and fails like the head view, by not grasping (12 of 13); it was mounted low because the positioner took the high vantage point, so its \SI{10}{\percent} occlusion is an upper bound. Median time to success is \SI{16}{}--\SI{19}{s} for every arm: the views differ in whether the task completes, not in how fast.
