@@ -181,6 +181,40 @@ arms, cannot be attributed to the camera because of that; this grid is clean (al
 the new map), and within it the head-view arms have not dropped once. Grasp tuning is necessary
 regardless of camera.
 
+## Hypothesis to keep in view: the teleoperation style is the head view's
+
+All eight arms train on the same 172 teleoperated episodes, recorded by the head, wrist and fixed
+cameras at once, so the actions are identical across arms and only the observation differs. Those
+actions were chosen by an operator watching the head camera's preview. Nothing in them keeps the
+bin inside the fisheye's view during the carry, or keeps the gripper clear of the robot's own upper
+arm for the low fixed camera. Rollout frames (scene 12) show exactly that: from the grasp onward
+the wrist view holds the block and the far wall and nothing else, the bin appearing only at the
+end; the head view holds bin, gripper and block throughout; the fixed view loses the gripper behind
+the upper arm. Every policy inherits the style, and the two cameras that do not share the
+operator's view pay at those moments (wrist: drops; fixed: no-grasp from occlusion).
+
+This is also the normal UMI condition, since a human demonstrator sees the scene while the wrist
+camera sees a cone, so it is a property of the method rather than a handicap we introduced. The
+defensible claim is "the camera that shares the demonstrator's view wins".
+
+Suggested sentences (not yet in the text; three lines, add when trimming):
+
+- Design paragraph: "The teleoperator watched the head camera's preview, and the same episodes
+  are observed by all three cameras, so the arms share actions and differ only in observation;
+  the demonstration style is the one that view affords."
+- Limitations: "Demonstrations made under a wrist-camera preview might favour the wrist camera;
+  that control was not collected."
+
+Future work (no space in this paper):
+
+- Measure, over the carry phase of the 172 teleoperated episodes, the fraction of frames in which
+  the bin is inside each camera's view (large grey-blue region, area threshold separates it from
+  the small blue blocks). Turns the frames into a statistic for the which-camera paragraph.
+- Collect a teleop subset under a wrist preview and a fixed-camera preview and re-run arms 5
+  and 7 on it: the control that separates "better camera" from "camera that matches the
+  demonstrator".
+- For arm 7, the fraction of rollout frames in which the gripper leaves the 384 px policy crop.
+
 ## Where help is wanted (Igor)
 
 - Citations and one or two background sentences in Section 1: SLAM/IMU tracking in UMI-style
