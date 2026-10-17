@@ -6,7 +6,7 @@ single-blind, OpenReview. Due **16 Oct 2026**.
 
 Build: `latexmk -pdf main.tex` in this directory (then `latexmk -c`).
 Red text = placeholder or open question. Blue text = a number that comes from the rollout grid
-still running on the robot (25 scenes per arm; 14 done at the time of writing).
+still running on the robot (25 scenes per arm; 19 done at the time of writing).
 
 ## The system in five lines
 
@@ -44,7 +44,7 @@ Arms 5 and 7 have more glove *segments* but 10% fewer glove *frames* (43.5k vs 4
 camera loses the gripper behind the collector's body, those stretches are cut, and the episodes
 fragment. Arm 6 is scored on the encoder targets too (its own-chain loss is 0.282).
 
-## Preliminary rollout tally (14 of 25 scenes, 112 trials, 16:16 on 16 Oct)
+## Preliminary rollout tally (19 of 25 scenes, 152 trials, 20:00 on 16 Oct)
 
 Protocol: 25 block placements, each placed once and then re-placed to a saved reference image
 (ghost alignment) for every other arm; arm order shuffled per scene; 60 s budget; outcome scored
@@ -52,17 +52,29 @@ by the operator (success / no grasp / dropped before bin / dropped at bin / time
 
 | # | arm | success | median time to success | failures |
 |---|---|---|---|---|
-| 1 | teleop only 172 | 12/14 | 15.2 s | 2 no-grasp |
-| 2 | **device** 172 + glove | 12/14 | 15.3 s | 2 no-grasp |
-| 3 | teleop only 48 | 7/14 | 16.7 s | 7 no-grasp |
-| 4 | device 48 + glove | 12/14 | 17.3 s | 2 no-grasp |
-| 5 | wrist-cam UMI | 9/14 | 18.5 s | 2 no-grasp, 3 dropped |
-| 6 | head-cam teleop labels | 10/14 | 19.1 s | 4 no-grasp |
-| 7 | fixed camera system | 8/14 | 17.4 s | 5 no-grasp, 1 dropped |
-| 8 | head labels, wrist view | 8/14 | 15.0 s | 1 no-grasp, 5 dropped |
+| 1 | teleop only 172 | 16/19 | 15.8 s | 3 no-grasp |
+| 2 | **device** 172 + glove | 17/19 | 17.4 s | 2 no-grasp |
+| 3 | teleop only 48 | 8/19 | 16.9 s | 11 no-grasp |
+| 4 | device 48 + glove | 14/19 | 17.3 s | 5 no-grasp |
+| 5 | wrist-cam UMI | 11/19 | 18.5 s | 4 no-grasp, 3 dropped before bin, 1 at bin |
+| 6 | head-cam teleop labels | 12/19 | 19.1 s | 7 no-grasp |
+| 7 | fixed camera system | 10/19 | 17.4 s | 8 no-grasp, 1 dropped at bin |
+| 8 | head labels, wrist view | 11/19 | 15.6 s | 1 no-grasp, 6 dropped before bin, 1 at bin |
 
-Resolution: at 25 trials the binomial 95% interval is about +/-18 points, so two arms need to
-differ by roughly 5 trials to be worth a sentence.
+Paired (same scenes) exact McNemar tests, wins / losses / two-sided p:
+
+| comparison | wins / losses | p |
+|---|---|---|
+| device 48 vs teleop-only 48 (arm 4 vs 3) | 7 / 1 | 0.07 |
+| device vs teleop-only, full budget (2 vs 1) | 2 / 1 | 1.0 |
+| head labels vs encoders (6 vs 1) | 3 / 7 | 0.34 |
+| device vs wrist-cam UMI (2 vs 5) | 6 / 0 | **0.03** |
+| device vs fixed camera (2 vs 7) | 9 / 2 | 0.07 |
+| device vs head labels on wrist view (2 vs 8) | 7 / 1 | 0.07 |
+| label source on the wrist view (8 vs 5) | 2 / 2 | 1.0 |
+
+Resolution: at 25 trials the binomial 95% interval is about +/-18 points; the paired tests above
+are what the text should lean on, since every arm sees the same placements.
 
 ## The one-line story
 
@@ -83,7 +95,7 @@ viewpoint model is a naive linear fit on one glove session, so the numbers here 
    fixed-camera glove paid 14% in the device paper.
 2. **Glove data stretches a small teleop budget.** Offline: the 194 glove segments are worth
    65-100 teleop episodes (2-3 glove demos per teleop demo); 48 teleop + glove lands between 96
-   and 172 teleop alone. Robot (preliminary): 7/14 -> 12/14 at the 48 budget, every teleop-only
+   and 172 teleop alone. Robot (preliminary, 19 scenes): 8/19 -> 14/19 at the 48 budget, every teleop-only
    failure a no-grasp. The gain shrinks with budget: at full budget the device and teleop-only are
    tied, which is the task ceiling (about 85%), not a failure of the glove data.
 3. **The same camera on the robot closes the viewpoint gap.** Teleop and rollouts see what the
@@ -95,22 +107,26 @@ viewpoint model is a naive linear fit on one glove session, so the numbers here 
    (same labels); arm 8 vs 5 isolates the label source (same observation); arm 7 asks whether a
    moving camera is needed at all.
 
-## What we can already say safely (14 scenes)
+## What we can already say safely (19 scenes)
 
-- Head-camera labels are as good as encoders for training (arm 6 vs 1, offline 3%, robot
-  10/14 vs 12/14).
-- Glove data recovers the low-budget teleop policy (arm 4 vs 3: 12/14 vs 7/14). This is the
-  headline robot result and it matches the offline curve.
-- At full budget co-training does no harm (arm 2 vs 1: 12/14 vs 12/14).
-- Wrist-view policies fail by dropping; head-view policies fail by not grasping. The direction of
-  the camera comparison (head > wrist, fixed) is visible but not yet significant.
+- Glove data recovers the low-budget teleop policy (arm 4 vs 3: 14/19 vs 8/19, 7 wins to 1,
+  p = 0.07 and tightening). This is the headline robot result and it matches the offline curve.
+- At full budget co-training does no harm (arm 2 vs 1: 17/19 vs 16/19, tied). The task ceiling
+  is about 85-90%; no-grasp is the only failure of any head-view arm.
+- The camera matters more than the labels. The device beats the conventional wrist-camera recipe on
+  the same placements (6 wins to 0, p = 0.03); swapping its labels onto the wrist view (arm 8) does
+  not help (8 vs 5 tied, 2/2), while keeping the labels and swapping the view does (2 vs 8, 7/1).
+- Failure modes split by camera: 11 drops in 38 wrist-view trials, 1 in 19 fixed-camera trials,
+  0 in 95 head-view trials. Head-view policies only ever fail by not grasping.
+- Head-camera labels in place of encoders cost something on the robot (arm 6 vs 1: 12/19 vs
+  16/19, 3 wins to 7, not significant). Say "within noise of" rather than "as good as" until 25.
 
 ## What waits for the final count
 
-- Arms 2 vs 5 vs 7 vs 8 success rates (the camera comparison).
-- Whether arm 8 (head labels, wrist view) beats arm 5 (fixed labels, wrist view): the label-source
-  effect on the standard UMI observation.
+- The budget pair and the fixed-camera comparison are at p = 0.07 with 19 scenes; two more
+  discordant scenes in the same direction make both significant.
 - Arm 7's placement in the ranking, with its caveat (below).
+- Whether arm 6 closes the gap to arm 1.
 
 ## Caveats to keep in the text
 
