@@ -327,11 +327,11 @@ Generated 2026-10-16 from workflow run wf_1436e346-5a0 (one Haiku agent per stat
 
 **Current text** (`sections/idea.tex`):
 
-> The collector's head follows the hand by habit, since gaze leads the hand in everyday manipulation \citep{land2001eye};
+> The collector's head tracks the hand by habit, since gaze goes to each object just before the hand acts on it \citep{land2001eye};
 
 **Verdict:** supported
 
-**Resolution:** Supported (PDF supplied by hand): Land & Hayhoe show gaze leads each manipulative action by about half a second. Wording to consider: "the head follows the hand ... since gaze leads the hand" reads as a contradiction; suggested "The collector's head tracks the hand by habit, since gaze goes to each object just before the hand acts on it".
+**Resolution:** Supported (PDF supplied by hand): Land & Hayhoe show gaze leads each manipulative action by about half a second. Reworded: "the head follows the hand ... since gaze leads the hand" read as a contradiction; now "the head tracks the hand by habit, since gaze goes to each object just before the hand acts on it".
 
 **Sources:**
 
