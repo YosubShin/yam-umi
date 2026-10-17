@@ -31,11 +31,11 @@ In contrast, labelling the same demonstrations with a fixed external camera lose
 
 \paragraph{The robot's head.}
 To match egocentric viewpoints between demonstration collection and robot deployment, a six-joint SO-101 follower arm \citep{so101} stands beside the YAM and carries an identical 4K camera (Fig.~\ref{fig:teaser}c).
-Built from 3D-printed components and six Feetech STS3215 servos (\$13.89 each; \$121.94 total follower parts list), this active camera positioner adds under \$250 to a teleoperation rig.
+Built from 3D-printed components and six Feetech STS3215 servos (\$13.89 each; \$121.94 total follower parts list), this active camera positioner adds under \$250 to a teleoperation rig. The follower's gripper bracket is removed and its gripper servo reused as a wrist-yaw joint, which carries a printed GoPro-pattern mount; the head strap uses the same pattern, so the one camera moves between head and robot without re-mounting.
 The arm's kinematic model is fitted once from 60 tile-verified poses, achieving \SI{7}{mm} / \SI{0.7}{\degree} residual error.
 At the start of each session, the positioner parks at the median head pose observed in glove demonstrations and registers its viewpoint against the reference tiles.
 During both teleoperation and autonomous rollouts, the positioner tracks the gripper autonomously using only the YAM's joint encoders, remaining completely transparent to the policy.
-Forward kinematics determines the gripper coordinates; a fixed-gain controller maintains the gripper's initial visual bearing, while a linear residual model fitted to human demonstration sessions reproduces natural head motion relative to hand displacement.
+Forward kinematics determines the gripper coordinates; a fixed-gain controller maintains the gripper's initial visual bearing, while a ridge-regression residual model, fitted on about 100 glove episodes of one session, reproduces natural head motion relative to hand displacement: on 15 held-out episodes it predicts the collector's head pose to \SI{46}{mm} / \SI{5.4}{\degree} median (\SI{81}{mm} / \SI{9.6}{\degree} p90), against \SI{87}{mm} / \SI{7.0}{\degree} for a camera held at the median head pose.
 Motor commands are low-pass filtered, rate-limited to \SI{50}{\degree/s}, and bounded within a safe workspace volume.
 The resulting camera motion tracks the gripper with \SI{0.4}{s} lag and a median tile-referenced position error of \SI{16}{mm} (\SI{34}{mm} p90), closely replicating human demonstration framing: the normalized gripper centroid in the robot head view (0.37/0.62) matches the human collector's view (0.38/0.60).
 
