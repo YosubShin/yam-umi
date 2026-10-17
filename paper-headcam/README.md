@@ -197,23 +197,16 @@ This is also the normal UMI condition, since a human demonstrator sees the scene
 camera sees a cone, so it is a property of the method rather than a handicap we introduced. The
 defensible claim is "the camera that shares the demonstrator's view wins".
 
-Suggested sentences (not yet in the text; three lines, add when trimming):
+The two sentences are in the text (design paragraph; limitations).
 
-- Design paragraph: "The teleoperator watched the head camera's preview, and the same episodes
-  are observed by all three cameras, so the arms share actions and differ only in observation;
-  the demonstration style is the one that view affords."
-- Limitations: "Demonstrations made under a wrist-camera preview might favour the wrist camera;
-  that control was not collected."
+Future work, actual experiments:
 
-Future work (no space in this paper):
-
-- Measure, over the carry phase of the 172 teleoperated episodes, the fraction of frames in which
-  the bin is inside each camera's view (large grey-blue region, area threshold separates it from
-  the small blue blocks). Turns the frames into a statistic for the which-camera paragraph.
-- Collect a teleop subset under a wrist preview and a fixed-camera preview and re-run arms 5
-  and 7 on it: the control that separates "better camera" from "camera that matches the
-  demonstrator".
-- For arm 7, the fraction of rollout frames in which the gripper leaves the 384 px policy crop.
+- With existing data: over the carry phase of the 172 teleoperated episodes, the fraction of
+  frames in which the bin is inside each camera's view (large grey-blue region, area threshold
+  separates it from the small blue blocks), from the three synchronized streams.
+- New collection: a teleop set recorded under a wrist-camera preview (and one under the fixed
+  camera's), same episode budget, then arms 5 and 7 retrained on it. This separates "better
+  camera" from "camera that matches the demonstrator".
 
 ## Where help is wanted (Igor)
 
