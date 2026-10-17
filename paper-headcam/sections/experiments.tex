@@ -44,9 +44,16 @@ Offline, the four co-trained arms with different cameras (2, 5, 7, 8) sit within
 
 \begin{figure}[t]
   \centering
-  \fbox{\parbox[c][4.2cm][c]{0.96\linewidth}{\centering \todo{Rollout protocol figure as in the device paper: the 25 placements with per-scene success over the 8 arms; ghost-alignment inset. Generate from rollout\_logs/grid\_20261016 (placements.json, scene*\_ref.png, trials.jsonl).}}}
-  \caption{Rollout protocol. \grid{25} placements, each scene's block re-placed to a saved reference for every arm (ghost alignment), arm order shuffled per scene, \SI{60}{s} budget.}
+  \includegraphics[width=0.58\linewidth]{fig/placements.png}
+  \caption{Rollout protocol. \grid{25} placements over the fixed camera's view, each scene's block re-placed to a saved reference for every arm (ghost alignment), arm order shuffled per scene, \SI{60}{s} budget. Each disc is the successes of the eight arms at that placement; the arrow points to the scene's bin. \grid{Regenerate at 25 scenes: fig/make\_placements.py.}}
   \label{fig:placements}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{fig/rollouts.jpg}
+  \caption{One placement (scene 16), the four camera arms, at 2, 6, 10 and \SI{14}{s}, from the fixed workspace camera with each policy's own view inset. During the carry the wrist view (rows 2 and 4) holds the block and the far wall and nothing else; the head view (row 1) keeps gripper and bin in one frame. Arm 8 opened with the bin out of its view. \todo{Keep or cut for space; fig/make\_rollouts.py regenerates for any scene from 15 on.}}
+  \label{fig:rollouts}
 \end{figure}
 
 \paragraph{Anecdotes.}
