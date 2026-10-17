@@ -8,7 +8,7 @@ On the robot, the camera positioner lags gripper motions by \SI{0.4}{s} and can 
 An appearance gap also persists between human demonstrations and robot deployment: the head camera captures the collector's forearm and glove fingers, preventing policies trained solely on glove demonstrations from transferring zero-shot (robot validation loss 0.52 vs.\ 0.26 co-trained).
 Several experimental controls also warrant future evaluation.
 First, the fixed-camera baseline was mounted low because the positioner occupied the higher vantage point; a higher fixed camera would reduce occlusion, though it still cannot follow the hand.
-Second, teleoperators guided the robot while viewing the head-camera preview, which may favor egocentric observations; we did not collect a control set teleoperated under a wrist-camera preview.
+Second, teleoperators guided the robot while viewing the head-camera preview, which may favor egocentric observations; we did not collect a control set teleoperated under a wrist-camera preview. Third, each arm is a single seed evaluated once per placement, so the budget pair and the fixed-camera pair sit at $p = 0.06$ and the remaining pairs above it: the ranking is consistent across every paired comparison, but the individual gaps are not yet significant at 25 placements.
 Third, although our low-cost design enables parallel collection across multiple operators, all four demonstration sessions were recorded by a single collector with one glove \todo{confirm}.
 
 Collecting demonstrations in remote workspaces away from the robot still requires registering the tile layout to the robot's base frame, which we calibrated by having the robot hold the calibration target \todo{confirm calibration procedure for new remote setups}.

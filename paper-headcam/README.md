@@ -44,37 +44,48 @@ Arms 5 and 7 have more glove *segments* but 10% fewer glove *frames* (43.5k vs 4
 camera loses the gripper behind the collector's body, those stretches are cut, and the episodes
 fragment. Arm 6 is scored on the encoder targets too (its own-chain loss is 0.282).
 
-## Preliminary rollout tally (19 of 25 scenes, 152 trials, 20:00 on 16 Oct)
+## Final rollout tally (25 scenes, 200 trials, done 21:40 on 16 Oct; `fig/grid_stats.py` recomputes)
 
 Protocol: 25 block placements, each placed once and then re-placed to a saved reference image
 (ghost alignment) for every other arm; arm order shuffled per scene; 60 s budget; outcome scored
 by the operator (success / no grasp / dropped before bin / dropped at bin / timeout).
+Log: `~/co/pilot/rollout_logs/grid_20261016/trials.jsonl`; policy-view mp4 per trial, external-view
+`_world.mp4` from scene 15 on.
 
 | # | arm | success | median time to success | failures |
 |---|---|---|---|---|
-| 1 | teleop only 172 | 16/19 | 15.8 s | 3 no-grasp |
-| 2 | **device** 172 + glove | 17/19 | 17.4 s | 2 no-grasp |
-| 3 | teleop only 48 | 8/19 | 16.9 s | 11 no-grasp |
-| 4 | device 48 + glove | 14/19 | 17.3 s | 5 no-grasp |
-| 5 | wrist-cam UMI | 11/19 | 18.5 s | 4 no-grasp, 3 dropped before bin, 1 at bin |
-| 6 | head-cam teleop labels | 12/19 | 19.1 s | 7 no-grasp |
-| 7 | fixed camera system | 10/19 | 17.4 s | 8 no-grasp, 1 dropped at bin |
-| 8 | head labels, wrist view | 11/19 | 15.6 s | 1 no-grasp, 6 dropped before bin, 1 at bin |
+| 1 | teleop only 172 | 18/25 | 16.1 s | 5 no-grasp, 1 dropped before bin (scene 22, slip right after lift), 1 timeout |
+| 2 | **device** 172 + glove | **20/25** | 17.4 s | 5 no-grasp |
+| 3 | teleop only 48 | 10/25 | 17.2 s | 15 no-grasp |
+| 4 | device 48 + glove | 17/25 | 17.2 s | 8 no-grasp |
+| 5 | wrist-cam UMI | 15/25 | 18.1 s | 6 no-grasp, 3 dropped before bin, 1 at bin |
+| 6 | head-cam teleop labels | 15/25 | 18.7 s | 10 no-grasp |
+| 7 | fixed camera system | 12/25 | 18.5 s | 12 no-grasp, 1 dropped at bin |
+| 8 | head labels, wrist view | 14/25 | 15.6 s | 3 no-grasp, 7 dropped before bin, 1 at bin |
 
 Paired (same scenes) exact McNemar tests, wins / losses / two-sided p:
 
 | comparison | wins / losses | p |
 |---|---|---|
-| device 48 vs teleop-only 48 (arm 4 vs 3) | 7 / 1 | 0.07 |
-| device vs teleop-only, full budget (2 vs 1) | 2 / 1 | 1.0 |
-| head labels vs encoders (6 vs 1) | 3 / 7 | 0.34 |
-| device vs wrist-cam UMI (2 vs 5) | 6 / 0 | **0.03** |
-| device vs fixed camera (2 vs 7) | 9 / 2 | 0.07 |
-| device vs head labels on wrist view (2 vs 8) | 7 / 1 | 0.07 |
-| label source on the wrist view (8 vs 5) | 2 / 2 | 1.0 |
+| device 48 vs teleop-only 48 (arm 4 vs 3) | 9 / 2 | 0.065 |
+| teleop-only 172 vs 48 (1 vs 3) | 11 / 3 | 0.057 |
+| device vs teleop-only, full budget (2 vs 1) | 4 / 2 | 0.69 |
+| device 48 vs teleop-only 172 (4 vs 1) | 4 / 5 | 1.0 |
+| head labels vs encoders (6 vs 1) | 5 / 8 | 0.58 |
+| device vs wrist-cam UMI (2 vs 5) | 6 / 1 | 0.125 |
+| device vs fixed camera (2 vs 7) | 11 / 3 | 0.057 |
+| device vs head labels on wrist view (2 vs 8) | 8 / 2 | 0.11 |
+| label source on the wrist view (8 vs 5) | 2 / 3 | 1.0 |
+| wrist vs fixed (5 vs 7) | 9 / 6 | 0.61 |
 
-Resolution: at 25 trials the binomial 95% interval is about +/-18 points; the paired tests above
-are what the text should lean on, since every arm sees the same placements.
+Drops (before or at bin): wrist-view arms 5+8: 12 of 21 failures; head-view arms 1-4, 6: 1 of 45;
+fixed camera: 1 of 13.
+
+Resolution: at 25 trials the binomial 95% interval is about +/-18 points. No pair clears p = 0.05;
+the two at 0.06 (budget pair, device vs fixed camera) were at 0.07 with 19 scenes and the wrist pair
+went from 6/0 (p = 0.03) to 6/1 (p = 0.125) when arm 5 won scene 24. The paper says so in the
+limitations and leans on the consistency of the ranking (arm 2 loses to no arm on more than three
+placements) rather than on any one p.
 
 ## The one-line story
 
@@ -95,38 +106,43 @@ viewpoint model is a naive linear fit on one glove session, so the numbers here 
    fixed-camera glove paid 14% in the device paper.
 2. **Glove data stretches a small teleop budget.** Offline: the 194 glove segments are worth
    65-100 teleop episodes (2-3 glove demos per teleop demo); 48 teleop + glove lands between 96
-   and 172 teleop alone. Robot (preliminary, 19 scenes): 8/19 -> 14/19 at the 48 budget, every teleop-only
-   failure a no-grasp. The gain shrinks with budget: at full budget the device and teleop-only are
-   tied, which is the task ceiling (about 85%), not a failure of the glove data.
+   and 172 teleop alone. Robot (final, 25 scenes): 10/25 -> 17/25 at the 48 budget (9 wins / 2 losses, p = 0.065),
+   level with the full 172-episode teleop-only arm (18/25); every failure of both 48-episode arms a no-grasp. The gain shrinks with budget: at full budget the device and teleop-only are
+   tied (20/25 vs 18/25), which is the task ceiling (about 80%), not a failure of the glove data.
 3. **The same camera on the robot closes the viewpoint gap.** Teleop and rollouts see what the
    collector saw. The positioner is driven from joint state only, identically in both.
 4. **Which camera, and why.** Offline all four co-trained arms (2, 5, 7, 8) are within 0.011, so
-   the loss does not separate cameras. On the robot the failure modes do: head-view arms fail only
-   by never grasping; wrist-view arms drop the block during the carry, and every observed drop
-   happened while the bin was outside the fisheye's view. Arm 8 vs 2 isolates the observation
+   the loss does not separate cameras. On the robot the failure modes do: head-view arms fail
+   by never grasping (43 of 45 failures; one slip right after lift, one timeout); wrist-view arms
+   drop the block during the carry (12 of 21), and every observed wrist drop happened while the
+   bin was outside the fisheye's view. Arm 8 vs 2 isolates the observation
    (same labels); arm 8 vs 5 isolates the label source (same observation); arm 7 asks whether a
    moving camera is needed at all.
 
-## What we can already say safely (19 scenes)
+## What the paper now claims (25 scenes, all filled in; `\grid` renders black now)
 
-- Glove data recovers the low-budget teleop policy (arm 4 vs 3: 14/19 vs 8/19, 7 wins to 1,
-  p = 0.07 and tightening). This is the headline robot result and it matches the offline curve.
-- At full budget co-training does no harm (arm 2 vs 1: 17/19 vs 16/19, tied). The task ceiling
-  is about 85-90%; no-grasp is the only failure of any head-view arm.
-- The camera matters more than the labels. The device beats the conventional wrist-camera recipe on
-  the same placements (6 wins to 0, p = 0.03); swapping its labels onto the wrist view (arm 8) does
-  not help (8 vs 5 tied, 2/2), while keeping the labels and swapping the view does (2 vs 8, 7/1).
-- Failure modes split by camera: 11 drops in 38 wrist-view trials, 1 in 19 fixed-camera trials,
-  0 in 95 head-view trials. Head-view policies only ever fail by not grasping.
-- Head-camera labels in place of encoders cost something on the robot (arm 6 vs 1: 12/19 vs
-  16/19, 3 wins to 7, not significant). Say "within noise of" rather than "as good as" until 25.
+- Glove data recovers the low-budget teleop policy (arm 4 vs 3: 17/25 vs 10/25, 9 wins to 2,
+  p = 0.065) and lands it level with the full-budget teleop-only arm (18/25). Headline robot
+  result; matches the offline curve. Written as "outperforming ... matching".
+- At full budget co-training does no harm (arm 2 vs 1: 20/25 vs 18/25, 4/2). Task ceiling about
+  80%.
+- The camera matters, the labels do not. Device 20/25 vs wrist 15/25, fixed 12/25, head labels on
+  wrist 14/25 (6/1, 11/3, 8/2 wins). Same labels, wrist view (8 vs 2): loses six placements and
+  the no-grasps become drops. Same view, other labels (8 vs 5): 14 vs 15, 2/3, indistinguishable.
+- Failure modes split by camera: 12 of 21 wrist-view failures are drops; 1 of 45 head-view
+  failures (a slip, not a release); the fixed camera fails like the head view (no grasp) but more
+  often.
+- Head-camera labels in place of encoders: 15/25 vs 18/25, 5 wins to 8, p = 0.58. Written as
+  "within the noise of 25 trials", not "as good as".
+- Honesty line in the limitations: single seed, one trial per placement, no pair below 0.05, two
+  at 0.06, ranking consistent.
 
-## What waits for the final count
+## What is still open in the text
 
-- The budget pair and the fixed-camera comparison are at p = 0.07 with 19 scenes; two more
-  discordant scenes in the same direction make both significant.
-- Arm 7's placement in the ranking, with its caveat (below).
-- Whether arm 6 closes the gap to arm 1.
+- Teaser figure (main.tex): needs Yosub's photos for panels (a) and (c); panel (b) is in fig/src.
+- Two `\todo{confirm}` in limitations (one collector; remote-workspace calibration), how the camera
+  is worn (system), which hand-eye solver (system), keep-or-cut on fig:rollouts.
+- Length: 9 pages with references at 21:50 on 16 Oct against a 4-page body limit. Not trimmed yet.
 
 ## Caveats to keep in the text
 
@@ -137,7 +153,7 @@ viewpoint model is a naive linear fit on one glove session, so the numbers here 
 - Positioner lag about 0.4 s; joint limits on the largest sweeps.
 - Appearance gap: the head cam sees the collector's arm and the glove's fingers; glove-only
   policies do not transfer (val 0.52 vs 0.26 co-trained), as in the device paper.
-- 25 trials per arm; one seed per policy.
+- 25 trials per arm; one seed per policy; no paired difference below p = 0.05 (two at 0.06).
 
 ## Anecdotes (operator notes, `~/co/pilot/rollout_logs/grid_20261016/anecdotes.md`)
 
