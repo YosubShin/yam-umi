@@ -1,16 +1,16 @@
 \section{Limitations and what is next}
 \label{sec:discussion}
 
-Our tracking pipeline refines tile positions using pairwise median poses rather than full bundle adjustment \citep{triggs2000bundle}; joint optimization over all multi-tile observations should further reduce single-tile jitter below the current \SI{4}{}--\SI{9}{mm}.
+Our tracking pipeline refines tile positions from a single session using median single-tile poses rather than full bundle adjustment \citep{triggs2000bundle}; joint optimization over all multi-tile observations should further reduce single-tile jitter below the current \SI{4}{}--\SI{9}{mm}.
 Because 6-DoF tracking requires simultaneous visibility of the glove and at least one reference tile, label coverage depends on tile placement; while we establish empirical placement rules (\S\ref{sec:system}), we did not evaluate alternate layouts.
 On the robot, the camera positioner lags gripper motions by \SI{0.4}{s} and can reach joint limits during wide sweeping movements. A faster positioner arm or lighter camera payload would reduce this latency and expand the tracking workspace.
 
-An appearance gap also persists between human demonstrations and robot deployment: the head camera captures the collector's forearm and glove fingers, preventing policies trained solely on glove demonstrations from transferring zero-shot (robot validation loss 0.52 vs.\ 0.26 co-trained).
+An appearance gap also persists between human demonstrations and robot deployment: the head camera captures the collector's forearm and glove fingers, preventing policies trained solely on glove demonstrations from transferring zero-shot (robot validation loss 0.52 vs.\ 0.26 co-trained), as observed in the fixed-camera version of the device.
 Several experimental controls also warrant future evaluation.
 First, the fixed-camera baseline was mounted low because the positioner occupied the higher vantage point; a higher fixed camera would reduce occlusion, though it still cannot follow the hand.
 Second, teleoperators guided the robot while viewing the head-camera preview, which may favor egocentric observations; we did not collect a control set teleoperated under a wrist-camera preview. Third, each arm is a single seed evaluated once per placement, so the budget pair and the fixed-camera pair sit at $p = 0.06$ and the remaining pairs above it: the ranking is consistent across every paired comparison, but the individual gaps are not yet significant at 25 placements.
 Third, although our low-cost design enables parallel collection across multiple operators, all four demonstration sessions were recorded by a single collector with one glove \todo{confirm}.
 
-Collecting demonstrations in remote workspaces away from the robot still requires registering the tile layout to the robot's base frame, which we calibrated by having the robot hold the calibration target \todo{confirm calibration procedure for new remote setups}.
+Collecting demonstrations in remote workspaces away from the robot still requires registering the tile layout to the robot's base frame, which was calibrated here with the robot holding the calibration ball \todo{check how glove data from a new place maps into the robot frame}.
 Hardware designs \citep{yamumi2026} and calibration, recording, and tracking tools \citep{forwardcamumi2026} are open under the MIT license; robot-side hand-eye calibration and dataset-construction utilities are not yet released.
-Key next steps include multi-tile workspace mapping, parallel collection across diverse in-the-wild environments, and evaluating the head-camera setup on long-horizon, multi-stage manipulation tasks.
+Key next steps include multi-tile workspace mapping, parallel collection across diverse in-the-wild environments, and evaluating the head-camera setup on a second manipulation task.
