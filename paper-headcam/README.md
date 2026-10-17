@@ -139,7 +139,9 @@ viewpoint model is a naive linear fit on one glove session, so the numbers here 
 
 ## What is still open in the text
 
-- Teaser figure (main.tex): needs Yosub's photos for panels (a) and (c); panel (b) is in fig/src.
+- Teaser figure: done (`fig/make_teaser.py`; sources `fig/src/collector_iphone_26s.jpg`, `rollout_iphone_250s.jpg`,
+  `headcam_glove6_182s_overlay.jpg`). The iPhone videos they come from are in `media/originals/` (gitignored)
+  and on the NAS at `yam-umi-media/originals/`; the rollout one (8 min, all arms on one scene) is supplementary-video material.
 - Two `\todo{confirm}` in limitations (one collector; remote-workspace calibration), how the camera
   is worn (system), which hand-eye solver (system), keep-or-cut on fig:rollouts.
 - Length: 9 pages with references at 21:50 on 16 Oct against a 4-page body limit. Not trimmed yet.
