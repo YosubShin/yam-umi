@@ -139,8 +139,12 @@ viewpoint model is a naive linear fit on one glove session, so the numbers here 
    59.1 mm opening with 0.29 mm p95 error in one view but 2.3 and 5.1 mm in two turned poses.
    Done: a width sentence in the label-accuracy paragraph, from the 112 teleoperated episodes
    where encoders are the reference (3.5% of stroke median, 7.9% p90, 2.3% when closed, no lag,
-   100% coverage in 9 of 10 episodes, a 4-6% under-read at full opening). Still open (red todo):
-   unseen openings across viewing angles with coverage per angle.
+   100% coverage in 9 of 10 episodes, a 4-6% under-read at full opening). Also binned by workspace quartile, distance, camera elevation and
+   line-of-sight angle to the jaws (forward kinematics on the encoder joints): every bin 2.8-4.8%
+   median, 6.8-8.5% p90, worst looking across the jaws. The fixed camera of the device paper read
+   the same gripper at 4.4% median, 94% coverage. What this does not cover: openings never seen in
+   calibration (the teleop estimators are fit on alternate frames of the same session; the glove's
+   are fit on spacer holds in one session and applied to the other three, unmeasured).
 2. *Tile placement and visibility.* Clips where the head cam tracked the glove but got no world
    pose; a tag PDF open on a laptop confused localisation. Done: two practical rules in the
    collection paragraph (tiles where the gaze lands at the grasp, two in view from the natural head
@@ -149,9 +153,9 @@ viewpoint model is a naive linear fit on one glove session, so the numbers here 
 **Yosub.** The tail was not explained; it is now (collection paragraph). It is the part that makes
 an electronics-free glove possible: fingertip tags face the wrist camera and are invisible from
 behind the hand (0 of 13.7k frames in the first test, Aug 2026), so each jaw carries a wedge with
-tags on three faces, read against a fixed tag on the gripper back. The original feasibility
+tags on five faces, read against a fixed tag on the gripper back. The original feasibility
 numbers (robot gripper, fixed camera, Aug-Sep 2026): single-tail fallback 5-7 mm RMS over the
-95 mm swing; later wedges with three faces, 94% coverage and 4.4% of stroke median error.
+95 mm swing; later wedges with more faces, 94% coverage and 4.4% of stroke median error.
 
 ## Confound to keep in mind (not in the paper)
 
