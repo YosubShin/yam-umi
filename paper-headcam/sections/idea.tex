@@ -10,7 +10,7 @@ Dedicated visual-inertial sensors add bulk and a second device to the handheld g
 Mounting a VR controller on the gripper adds significant weight---\SI{119}{g} of YUBI's \SI{319}{g} total \citep{yubi2026,tinyumi2026}---and relies on external tracking infrastructure with separate calibration errors \citep{vrtracking2024,quest2rehab2022}.
 Fixed overhead cameras \citep{yamumi2026} avoid drift, but confine collection to a rigid mount and suffer from severe body occlusion, hiding the hand in \SI{8}{}--\SI{22}{\percent} of frames (\S\ref{sec:labels}).
 Wrist-mounted observation cameras also present fundamental limitations: they add cables, weight, and synchronisation overhead to the hand.
-Worse, their narrow field of view focuses strictly on the jaws; during transport, target locations (such as a drop-off bin) easily pass out of frame, sacrificing the global scene context required for manipulation \citep{hsu2022hands}.
+Worse, the view is tied to the hand: even through a \SI{155}{\degree} fisheye, as UMI uses, the frame holds whatever the jaws face, so during transport, target locations (such as a drop-off bin) pass out of frame once the hand lifts or turns, sacrificing the scene context required for manipulation \citep{hsu2022hands}.
 
 We address both tracking and observation with a single head-worn camera, directly tackling two central challenges in handheld demonstration \citep{umiarena2026}: tracking without SLAM and closing the human-to-robot viewpoint gap.
 Because gaze naturally fixates on objects before manual interaction \citep{land2001eye}, a collector's head instinctively follows the hand.
