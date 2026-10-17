@@ -150,7 +150,7 @@ Generated 2026-10-16 from workflow run wf_1436e346-5a0 (one Haiku agent per stat
 
   > Combined with the gripper redesign, the YUBI system integrates high-frequency VR sensors directly into each gripper
 
-- `yubi2026`, Section 1 (Introduction), p. 3 — supports: The VR tracking system (Quest 3S) is a separate component on top of the gripper, i.e. a tracking system of its own — ***unconfirmed***
+- `yubi2026`, Section 1 (Introduction), p. 3 — supports: The VR tracking system (Quest 3S) is a separate component on top of the gripper, i.e. a tracking system of its own — *verified by hand*
 
   > Each YUBI gripper can be fabricated for under $200 USD with 3D printed parts (excluding the Quest 3S tracking system)
 
@@ -545,7 +545,7 @@ Generated 2026-10-16 from workflow run wf_1436e346-5a0 (one Haiku agent per stat
 
   > a dodecahedral ArUco marker ball on a stalk
 
-- `yamumi2026`, pos-tracking_README.md, figure alt text (line 19) — supports: Placement of the ball on the wrist stalk, not explicitly on the back of the hand — ***unconfirmed***
+- `yamumi2026`, pos-tracking_README.md, figure alt text (line 19) — supports: Placement of the ball on the wrist stalk, not explicitly on the back of the hand — *verified*
 
   > with the dodecahedral ArUco marker ball mounted on its wrist stalk
 
@@ -655,7 +655,7 @@ Generated 2026-10-16 from workflow run wf_1436e346-5a0 (one Haiku agent per stat
 
   > Both the camera for the computer vision system and the target for the sensor system are rigidly attached to a moving robot arm with a fixed unknown transformation Y between them.
 
-- `shah2013robotworld`, Section 1 Introduction, setup of Fig. 1 — supports: X is the unknown fixed transform between the stationary sensor and the stationary object, i.e. the robot-world link. The paper does not name the robot base. — ***unconfirmed***
+- `shah2013robotworld`, Section 1 Introduction, setup of Fig. 1 — supports: X is the unknown fixed transform between the stationary sensor and the stationary object, i.e. the robot-world link. The paper does not name the robot base. — *verified by hand*
 
   > There is a fixed unknown transformation X between the stationary sensor and object.
 
@@ -725,11 +725,11 @@ Generated 2026-10-16 from workflow run wf_1436e346-5a0 (one Haiku agent per stat
 
 **Quotes:**
 
-- `zhao2023act`, Abstract (p. 1) — supports: ACT is the imitation-learning algorithm introduced in this paper, named Action Chunking with Transformers. — ***unconfirmed***
+- `zhao2023act`, Abstract (p. 1) — supports: ACT is the imitation-learning algorithm introduced in this paper, named Action Chunking with Transformers. — *verified by hand*
 
   > we develop a simple yet novel algorithm, Action Chunking with Transformers (ACT), which learns a generative model over action sequences
 
-- `zhao2023act`, Section I (Introduction), contributions paragraph, left column (p. 1) — supports: The paper itself names the proposed imitation-learning method ACT, supporting that ACT is introduced in this paper. — ***unconfirmed***
+- `zhao2023act`, Section I (Introduction), contributions paragraph, left column (p. 1) — supports: The paper itself names the proposed imitation-learning method ACT, supporting that ACT is introduced in this paper. — *verified*
 
   > We name our method Action Chunking with Transformers (ACT)
 
@@ -967,7 +967,7 @@ Generated 2026-10-16 from workflow run wf_1436e346-5a0 (one Haiku agent per stat
 
   > Printed parts are provided as STEP and STL. The STEP files are the source of
 
-- `yamumi2026`, bom/README.md, opening paragraph — supports: A bill of materials (BOM) is published — ***unconfirmed***
+- `yamumi2026`, bom/README.md, opening paragraph (library copy: library/yamumi2026/bom_README.md) — supports: A bill of materials (BOM) is published — *verified*
 
   > Parts needed for **one** YAM-UMI gripper.
 
