@@ -131,6 +131,36 @@ viewpoint model is a naive linear fit on one glove session, so the numbers here 
 - Wrist-view arms drop when the wrist view is looking away from the bin; the converse was never
   seen.
 
+## Feedback received so far
+
+**Yuan (16 Oct, after reading the draft and setting up collection on a Mac).**
+
+1. *Jaw-width accuracy deserves its own check.* Their fixed-camera width estimator read a
+   59.1 mm opening with 0.29 mm p95 error in one view but 2.3 and 5.1 mm in two turned poses.
+   Done: a width sentence in the label-accuracy paragraph, from the 112 teleoperated episodes
+   where encoders are the reference (3.5% of stroke median, 7.9% p90, 2.3% when closed, no lag,
+   100% coverage in 9 of 10 episodes, a 4-6% under-read at full opening). Still open (red todo):
+   unseen openings across viewing angles with coverage per angle.
+2. *Tile placement and visibility.* Clips where the head cam tracked the glove but got no world
+   pose; a tag PDF open on a laptop confused localisation. Done: two practical rules in the
+   collection paragraph (tiles where the gaze lands at the grasp, two in view from the natural head
+   pose, none under the bin or in the arm's sweep; no other tag in the scene).
+
+**Yosub.** The tail was not explained; it is now (collection paragraph). It is the part that makes
+an electronics-free glove possible: fingertip tags face the wrist camera and are invisible from
+behind the hand (0 of 13.7k frames in the first test, Aug 2026), so each jaw carries a wedge with
+tags on three faces, read against a fixed tag on the gripper back. The original feasibility
+numbers (robot gripper, fixed camera, Aug-Sep 2026): single-tail fallback 5-7 mm RMS over the
+95 mm swing; later wedges with three faces, 94% coverage and 4.4% of stroke median error.
+
+## Confound to keep in mind (not in the paper)
+
+Between last week's rollouts and this grid the glove width map changed (closed-on-object anchor
+0.246 -> 0.225, the squeeze level). Last week's mid-air drops, including the wrist and fixed-cam
+arms, cannot be attributed to the camera because of that; this grid is clean (all eight arms use
+the new map), and within it the head-view arms have not dropped once. Grasp tuning is necessary
+regardless of camera.
+
 ## Where help is wanted (Igor)
 
 - Citations and one or two background sentences in Section 1: SLAM/IMU tracking in UMI-style
