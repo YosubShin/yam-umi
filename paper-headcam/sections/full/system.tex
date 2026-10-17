@@ -1,0 +1,48 @@
+\section{System}
+\label{sec:system}
+
+\paragraph{Collection.}
+The glove is a completely unpowered, 3D-printed replica of the YAM gripper \citep{i2rtyam} from \citet{yamumi2026}, pairing the robot's stock fingers with a rack-and-pinion linear mechanism.
+To track 6-DoF pose without onboard electronics, the glove mounts an 11-face, \SI{15}{mm} ArUco \citep{garrido2014aruco} dodecahedron on the back of the hand \citep{wu2017dodecapen}.
+Measuring jaw opening from an egocentric head camera requires redesigning the width markers: standard fingertip tags facing a wrist camera \citep{chi2024umi} remain edge-on or occluded from a head vantage point.
+Instead, each jaw features a printed wedge---\emph{tail}---displaying \SI{12}{mm} AprilTags across five facets alongside a fixed tag on the gripper body.
+Because at least one tail facet remains visible across hand orientations, the distance between the tail tag and back tag, projected along the jaw travel axis, yields the jaw width on every frame (\S\ref{sec:labels}).
+Omitting the wrist camera, battery, and cabling keeps the glove entirely passive and inexpensive (\$22 in parts).
+The human collector wears an Arducam B0587 4K camera (\$122) on a \$10 GoPro head strap through a printed GoPro-pattern adapter (\SI{103}{g} worn, plus \SI{37}{g} of USB cable), capturing footage at \SI{15}{Hz} with a short exposure time to prevent motion blur. The camera is aimed once per session: with the live preview open, the collector looks at a point \SI{0.5}{}--\SI{1}{m} away and tilts the mount until the centre of the frame coincides with the centre of their own view, so the camera looks where the head looks.
+Four \SI{60}{mm} AprilTag reference tiles define the workspace frame (Fig.~\ref{fig:teaser}).
+These tiles are positioned where the collector's gaze naturally falls during grasping, ensuring at least two remain visible without obstructing the bin or the arm's sweep, while extraneous tags are excluded from the scene.
+Continuous recording with keypress episode boundaries achieves 2.0--3.1 pick-and-place demonstrations per minute (median episode duration \SI{6}{}--\SI{8}{s}), outperforming teleoperation on the same arm (1.6 per minute, median \SI{14}{s}).
+
+\paragraph{Labels from the head camera.}
+\label{sec:labels}
+Every video frame extracts three geometric signals from a single image:
+(i) camera pose relative to the workspace tiles;
+(ii) gripper 6-DoF pose in the camera frame, via fused Perspective-n-Point (PnP) across visible dodecahedron faces; and
+(iii) jaw opening width, computed from the visible tail tag distance via a unit-calibrated linear map (\SI{0.9}{}--\SI{3.8}{mm} holdout RMS across calipered spacer holds; calibrated on the robot against motor encoders).
+Composing the camera and gripper poses gives the tool pose in the workspace coordinate system.
+A one-time calibration on the robot transforms this into the robot base frame: with the ball mounted on the YAM's gripper, the flange-to-ball link is solved as a robot-world hand-eye problem (OpenCV's \texttt{calibrateRobotWorldHandEye}, \citet{shah2013robotworld}), and the tile-world-to-base link is a trimmed Kabsch fit of the head-camera tool point (tiles $\times$ ball) to forward kinematics over one 5\,065-frame session, enabling joint-space inverse kinematics directly comparable to teleoperated actions.
+Two mechanisms ensure reliable camera localization despite continuous head motion.
+First, we refine the nominal tile layout using multi-tile observations extracted directly from demonstration footage.
+This refitting reduces four-tile reprojection error from \SI{3.4}{px} to \SI{0.5}{px} RMS, cutting the median disagreement between single-tile camera solves on the same frame from \SI{10}{}--\SI{13}{mm} down to \SI{4}{}--\SI{9}{mm}.
+Second, frames with only one visible tile are chained to the preceding accepted camera pose under velocity bounds (\SI{0.6}{m/s}, \SI{120}{\degree/s}) rather than discarded.
+Temporary tracking dropouts longer than \SI{0.3}{s} split an episode into segments, and segments under \SI{1}{s} are dropped, ensuring momentary occlusions do not invalidate entire demonstrations.
+Across sessions, this segmentation cuts only \SI{0.7}{}--\SI{7.4}{\percent} of frames, yielding 200 clean segments from 198 demonstrations.
+In contrast, labelling the same demonstrations with a fixed external camera loses \SI{8}{}--\SI{22}{\percent} of frames due to operator body occlusions, fragmenting the dataset into 259 shorter segments.
+
+\paragraph{The robot's head.}
+To match egocentric viewpoints between demonstration collection and robot deployment, a six-joint SO-101 follower arm \citep{so101} stands beside the YAM and carries an identical 4K camera (Fig.~\ref{fig:teaser}c).
+Built from 3D-printed components and six Feetech STS3215 servos (\$13.89 each; \$121.94 total follower parts list), this active camera positioner adds under \$250 to a teleoperation rig. The follower's gripper bracket is removed and its gripper servo reused as a wrist-yaw joint, which carries a printed GoPro-pattern mount; the head strap uses the same pattern, so the one camera moves between head and robot without re-mounting.
+The arm's kinematic model is fitted once from 60 tile-verified poses, achieving \SI{7}{mm} / \SI{0.7}{\degree} residual error.
+At the start of each session, the positioner parks at the median head pose observed in glove demonstrations and registers its viewpoint against the reference tiles.
+During both teleoperation and autonomous rollouts, the positioner tracks the gripper autonomously using only the YAM's joint encoders, remaining completely transparent to the policy.
+Forward kinematics determines the gripper coordinates; a fixed-gain controller maintains the gripper's initial visual bearing, while a ridge-regression residual model, fitted on about 100 glove episodes of one session, reproduces natural head motion relative to hand displacement: on 15 held-out episodes it predicts the collector's head pose to \SI{46}{mm} / \SI{5.4}{\degree} median (\SI{81}{mm} / \SI{9.6}{\degree} p90), against \SI{87}{mm} / \SI{7.0}{\degree} for a camera held at the median head pose.
+Motor commands are low-pass filtered, rate-limited to \SI{50}{\degree/s}, and bounded within a safe workspace volume.
+The resulting camera motion tracks the gripper with \SI{0.4}{s} lag and a median tile-referenced position error of \SI{16}{mm} (\SI{34}{mm} p90), closely replicating human demonstration framing: the normalized gripper centroid in the robot head view (0.37/0.62) matches the human collector's view (0.38/0.60).
+
+\paragraph{Datasets and training.}
+Teleoperation under the head-camera positioner produced 178 episodes (38.6k frames at \SI{15}{Hz}), with 6 held out as a universal validation set.
+Four glove sessions yielded 198 demonstrations, resulting in 200 segments after blind cutting (50.0k frames, 6 held out).
+All policies use Action Chunking with Transformers (ACT) \citep{zhao2023act} trained through LeRobot \citep{lerobot2024} for 50k steps with joint-space actions, selecting the best checkpoint by validation loss on the held-out teleoperated episodes.
+Following \citet{yamumi2026}, glove timelines are resampled to teleoperation pace and measured widths are mapped into the robot's gripper command space.
+Crucially, anchoring the closed-grasp state to the teleoperators' minimum commanded squeeze (0.22 of full stroke, rather than the 0.25 median) ensures firm grasp transfer: the head-view policies released no block during the carry in 120 rollouts (one slip at lift-off).
+

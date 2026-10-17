@@ -1,0 +1,27 @@
+\section{The idea}
+\label{sec:idea}
+Robot teleoperation is fundamentally constrained by hardware availability: collecting each demonstration occupies both the robot and a human operator. Handheld demonstration devices decouple data collection from the robot, allowing operators to gather demonstrations in parallel across arbitrary workspaces. With our system, a collector records demonstrations faster than teleoperation on the same task (2.0--3.1 versus 1.6 demonstrations per minute, \S\ref{sec:system}) without using any robot time. Scaling up collection requires only an inexpensive (\$22) printed glove, a wearable (\$122) camera, and four paper fiducial tiles taped around the workspace. The glove is purely mechanical, a printed replica of the robot's gripper carrying fiducials and nothing else, and the one head-worn camera is at once the policy's observation and the source of the gripper's pose and jaw width, so there is no second sensor stream to synchronise or calibrate against.
+
+Every UMI-style device must resolve two questions: \emph{what does the policy see}, and \emph{how is the gripper tracked}?
+The conventional approach places both a camera and a pose tracker on the user's wrist.
+However, existing tracking methods carry substantial drawbacks.
+SLAM on the wrist camera \citep{chi2024umi,campos2021orbslam3} requires an initial mapping pass and textured scenes, and easily loses track under occlusion or rapid movement.
+Dedicated visual-inertial sensors add bulk and a second device to the handheld gripper \citep{fastumi2024}.
+Mounting a VR controller on the gripper adds significant weight---\SI{119}{g} of YUBI's \SI{319}{g} total \citep{yubi2026,tinyumi2026}---and relies on external tracking infrastructure with separate calibration errors \citep{vrtracking2024,quest2rehab2022}.
+Fixed overhead cameras \citep{yamumi2026} avoid drift, but confine collection to a rigid mount and suffer from severe body occlusion, hiding the hand in \SI{8}{}--\SI{22}{\percent} of frames (\S\ref{sec:labels}).
+Wrist-mounted observation cameras also present fundamental limitations: they add cables, weight, and synchronisation overhead to the hand.
+Worse, the view is tied to the hand: even through a \SI{155}{\degree} fisheye, as UMI uses, the frame holds whatever the jaws face, so during transport, target locations (such as a drop-off bin) pass out of frame once the hand lifts or turns, sacrificing the scene context required for manipulation \citep{hsu2022hands}.
+
+We address both tracking and observation with a single head-worn camera, directly tackling two central challenges in handheld demonstration \citep{umiarena2026}: tracking without SLAM and closing the human-to-robot viewpoint gap.
+Because gaze naturally fixates on objects before manual interaction \citep{land2001eye}, a collector's head instinctively follows the hand.
+This natural coordination keeps the gripper centered at arm's length and completely unoccluded by the torso.
+From this single vantage point, an 11-face fiducial ball on the glove provides the 6-DoF gripper pose, printed jaw tags indicate gripper opening, and four AprilTag tiles \citep{olson2011apriltag} taped to the table define the world coordinate frame.
+As a result, the glove carries zero electronics or cables, while the broad egocentric view keeps both the gripper and the task workspace (including the bin) in frame throughout the demonstration.
+During deployment, the same camera is mounted on a small, 3D-printed servo arm beside the robot.
+This positioner imitates human head motion based purely on the robot's joint state, moving identically during teleoperation and autonomous rollouts to ensure that training and deployment share the same viewpoint distribution.
+In exchange for adding a lightweight camera arm at deployment, we eliminate all onboard wrist cameras, trackers, and cables, while matching teleoperated policy performance.
+
+Two lines of recent work are most relevant.
+EgoMimic \citep{kareer2025egomimic} co-trains policies on robot demonstrations and egocentric human video from smart glasses, estimating hand pose directly from video; in contrast, our collector operates a physical replica of the robot gripper, ensuring matched contact physics and directly measured jaw width.
+Active-vision teleoperation systems \citep{chuang2025avaloha,cheng2024opentelevision} steer a robot-mounted camera by tracking an operator wearing a VR headset; in our system, the positioner operates autonomously during deployment, reproducing human head movements from the robot's joint kinematics without requiring an operator or headset.
+
