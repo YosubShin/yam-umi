@@ -11,17 +11,17 @@ Generated 2026-10-16 from workflow run wf_1436e346-5a0 (one Haiku agent per stat
 | S01 | §1 | campos2021orbslam3, chi2024umi | partial | Fixed |
 | S02 | §1 | fastumi2024 | partial | Fixed |
 | S03 | §1 | tinyumi2026, yubi2026 | partial | Fixed |
-| S04 | §1 | quest2rehab2022, vrtracking2024 | partial | Open |
+| S04 | §1 | quest2rehab2022, vrtracking2024 | supported | Supported |
 | S05 | §1 | yamumi2026 | partial | Fixed |
 | S06 | §1 | hsu2022hands | supported | Supported as written. |
 | S07 | §1 | umiarena2026 | supported | Supported as written. |
-| S08 | §1 | land2001eye | source unavailable | Open |
+| S08 | §1 | land2001eye | supported | Supported (PDF supplied by hand) |
 | S09 | §1 | olson2011apriltag, wang2016apriltag2 | partial | Fixed |
 | S10 | §1 | kareer2025egomimic | supported | Supported as written. |
 | S11 | §1 | cheng2024opentelevision, chuang2025avaloha | supported | Supported as written. |
 | S12 | §2 | i2rtyam | partial | No change |
 | S13 | §2 | yamumi2026 | partial | No change |
-| S14 | §2 | garrido2014aruco | source unavailable | Open |
+| S14 | §2 | garrido2014aruco | supported | Supported (PDF supplied by hand) |
 | S15 | §2 | wu2017dodecapen | supported | Supported as written. |
 | S16 | §2 | shah2013robotworld | partial | Fixed |
 | S17 | §2 | so101 | partial | Fixed |
@@ -180,14 +180,14 @@ Generated 2026-10-16 from workflow run wf_1436e346-5a0 (one Haiku agent per stat
 
 > a VR controller in or on the gripper \citep{yubi2026,tinyumi2026} adds weight to the hand (\SI{119}{g} of YUBI's \SI{319}{g}) and brings a tracking system of its own, whose accuracy has to be measured separately \citep{vrtracking2024,quest2rehab2022};
 
-**Verdict:** partial
+**Verdict:** supported
 
-**Resolution:** Open: vrtracking2024 supports the clause; quest2rehab2022 (MDPI, open access) could not be downloaded, so it is unchecked. Drop it or retry.
+**Resolution:** Supported: both sources measure consumer VR tracking against a reference. quest2rehab2022 was downloaded by hand (the agent was blocked by MDPI) and checked in the main loop.
 
 **Sources:**
 
 - `vrtracking2024`: `library/vrtracking2024/paper.pdf`; https://arxiv.org/pdf/2412.06116 — arXiv 2412.06116v1 preprint (Banaszczyk et al., 'How Accurate is the Positioning in VR? Using Motion Capture and Robotics to Compare Positioning Capabilities of Popular VR Headsets'). Text extracted with gs to /home/x1/github/yam-umi/paper-headcam/resources/library/vrtracking2024/text.txt.
-- `quest2rehab2022`: not obtained; https://www.mdpi.com/1424-8220/22/15/5511/pdf — Not obtained. Tried: (1) MDPI PDF URL, returned HTTP 'Access Denied' HTML page from the Akamai edge, not a PDF; (2) Unpaywall API for DOI 10.3390/s22155511 returned is_oa=true with publisher PDF at https://www.mdpi.com/1424-8220/22/15/5511/pdf?version=1658719133 (blocked the same way) and repository copies at PMC9332705 and DOAJ; (3) PMC URL https://pmc.ncbi.nlm.nih.gov/articles/PMC9332705/pdf/ returned HTML, not a PDF; (4) Europe PMC render and fulltextRepo URLs and the NCBI PMC PDF path did not return a PDF. No content was read from this source.
+- `quest2rehab2022`: `library/quest2rehab2022/paper.pdf`; https://www.mdpi.com/1424-8220/22/15/5511 — publisher PDF (open access, CC BY), downloaded by hand by Igor on 2026-10-16
 
 **Quotes:**
 
@@ -203,7 +203,19 @@ Generated 2026-10-16 from workflow run wf_1436e346-5a0 (one Haiku agent per stat
 
   > we obtained 3.17[mm] and 3.23[mm] of RMSE for Quest 2 and Quest Pro, respectively
 
-**Agent's note:** vrtracking2024 (Banaszczyk et al., arXiv 2412.06116) supports the claim as worded: it measures Meta Quest 2 and Quest Pro positioning against a motion-capture ground truth and reports non-trivial errors (RMSE about 3.2 mm, max about 10 to 12 mm). It also states that the 'accuracy' is judged against the manufacturer's specification, which is a weak claim that the paper treats as acceptable, so the paper does not show consumer tracking is unmeasured by default. The quest2rehab2022 source (Carnevale et al., Sensors 2022, DOI 10.3390/s22155511) could not be obtained from any legitimate open copy in this run (MDPI returns Access Denied; PMC and Europe PMC did not serve a PDF), so the second half of the citation, the claim that 'these papers' both perform such measurements, is unverified. Minimal rewording that the quotes support: 'brings a tracking system of its own, whose accuracy has to be measured separately \\citep{vrtracking2024}' (drop quest2rehab2022 until its PDF is checked, or re-run this check later when the MDPI copy is reachable). The paper also should not say the headset tracking is 'not given' by the manufacturer, since vrtracking2024 cites a manufacturer accuracy specification; a safer phrase would be 'whose accuracy has to be measured separately against a reference'."}]
+- `quest2rehab2022`, Section 1 Introduction — supports: VR tracking accuracy has to be evaluated, not assumed — *verified*
+
+  > The performance evaluation of a VR motion tracking device is crucial to evaluate their appropriateness for research and clinical applications.
+
+- `quest2rehab2022`, Abstract — supports: measured against a motion-capture reference — *verified*
+
+  > The controller measures were compared with those of a Qualisys optical capture system.
+
+- `quest2rehab2022`, Abstract — supports: non-trivial errors (about a centimetre) — *verified by hand*
+
+  > The results showed a mean absolute error of 13.52 ± 6.57 mm at a distance of 500 mm from the head-mounted display along the x-direction.
+
+**Agent's note:** vrtracking2024 (Banaszczyk et al., arXiv 2412.06116) supports the claim as worded: it measures Meta Quest 2 and Quest Pro positioning against a motion-capture ground truth and reports non-trivial errors (RMSE about 3.2 mm, max about 10 to 12 mm). It also states that the 'accuracy' is judged against the manufacturer's specification, which is a weak claim that the paper treats as acceptable, so the paper does not show consumer tracking is unmeasured by default. The quest2rehab2022 source (Carnevale et al., Sensors 2022, DOI 10.3390/s22155511) could not be obtained from any legitimate open copy in this run (MDPI returns Access Denied; PMC and Europe PMC did not serve a PDF), so the second half of the citation, the claim that 'these papers' both perform such measurements, is unverified. Minimal rewording that the quotes support: 'brings a tracking system of its own, whose accuracy has to be measured separately \\citep{vrtracking2024}' (drop quest2rehab2022 until its PDF is checked, or re-run this check later when the MDPI copy is reachable). The paper also should not say the headset tracking is 'not given' by the manufacturer, since vrtracking2024 cites a manufacturer accuracy specification; a safer phrase would be 'whose accuracy has to be measured separately against a reference'."}] UPDATE (main loop, after the PDF was supplied by hand): quest2rehab2022 obtained and checked; it measures the Quest 2 controller against a Qualisys optical motion-capture reference and reports a 13.52 ± 6.57 mm mean absolute error at 500 mm, so both citations support the clause as written.
 
 ## S05 (§1)
 
@@ -317,15 +329,33 @@ Generated 2026-10-16 from workflow run wf_1436e346-5a0 (one Haiku agent per stat
 
 > The collector's head follows the hand by habit, since gaze leads the hand in everyday manipulation \citep{land2001eye};
 
-**Verdict:** source unavailable
+**Verdict:** supported
 
-**Resolution:** Open: paywalled (Elsevier), no legal open copy. Needs a copy via the UH library in resources/library/land2001eye/.
+**Resolution:** Supported (PDF supplied by hand): Land & Hayhoe show gaze leads each manipulative action by about half a second. Wording to consider: "the head follows the hand ... since gaze leads the hand" reads as a contradiction; suggested "The collector's head tracks the hand by habit, since gaze goes to each object just before the hand acts on it".
 
 **Sources:**
 
-- `land2001eye`: not obtained; https://doi.org/10.1016/S0042-6989(01)00102-X — Not obtained. Unpaywall (api.unpaywall.org, with the requested email) lists two locations: (1) publisher open access at https://www.sciencedirect.com/science/article/pii/S004269890100102X/pdf, and (2) a Figshare repository copy (submittedVersion, cc-by) at https://figshare.com/articles/journal_contribution/In_what_ways_do_eye_movements_contribute_to_everyday_activities_/23364149. The ScienceDirect PDF URL returned an HTML page (Elsevier bot/access wall) rather than a PDF, and the /pdfft variant returned HTML as well. The Figshare landing page returned an AWS WAF challenge (HTTP 202, empty body), and the Figshare API record for article 23364149 lists zero files. No text was extracted and no quotes were taken. The empty directory /home/x1/github/yam-umi/paper-headcam/resources/library/land2001eye was created; no file was saved in it. A bad HTML download briefly named paper.pdf was removed.
+- `land2001eye`: `library/land2001eye/paper.pdf`; https://doi.org/10.1016/S0042-6989(01)00102-X — publisher PDF, downloaded by hand by Igor via library access on 2026-10-16
 
-**Agent's note:** I could not legitimately obtain Land & Hayhoe (2001), so S08 cannot be checked against the source and no quotes are given. Unpaywall lists a publisher open-access URL and a Figshare copy, but the publisher returns an HTML access wall, the Figshare landing page is blocked by a WAF challenge, and the Figshare API record has no attached files. The claim (gaze leads the hand in everyday manipulation) is plausible given the paper's topic, but it is unverified. Recommend checking the paper manually from an institutional login or an author copy and then re-running this check.
+**Quotes:**
+
+- `land2001eye`, Abstract — supports: gaze leads the hand — *verified*
+
+  > indicating that eye movements are planned into the motor pattern and lead each action
+
+- `land2001eye`, Section 1 Introduction — supports: gaze precedes the action by a fraction of a second — *verified*
+
+  > the relevant eye movements usually precede the motor acts they mediate by a fraction of a second
+
+- `land2001eye`, Fig. 2 caption (tea-making, 137 object-related actions) — supports: measured lead of fixation over manipulation — *verified*
+
+  > Movements of the whole body (A) precede the first fixation (B) by an average of 0.61 s (a), and these precede the first signs of manipulation (C) by 0.56 s (b).
+
+- `land2001eye`, Section 2 — supports: everyday tasks (tea-making, sandwich-making), head free to move — *verified*
+
+  > In both cases the location of foveal gaze was monitored continuously using a head-mounted eye tracker with an accuracy of about 1°, and the head was free to move.
+
+**Agent's note:** Checked in the main loop after Igor supplied the PDF (the agent found no legal open copy). Supports "gaze leads the hand in everyday manipulation" (tea- and sandwich-making, head-mounted eye tracker, head free). It is about gaze (eyes, with the head free), not head pose; "the head follows the hand" is our own observation. Wording note: "the head follows the hand ... since gaze leads the hand" reads as a contradiction. Suggested: "The collector's head tracks the hand by habit, since gaze goes to each object just before the hand acts on it \citep{land2001eye};"
 
 ## S09 (§1)
 
@@ -541,15 +571,29 @@ Generated 2026-10-16 from workflow run wf_1436e346-5a0 (one Haiku agent per stat
 
 > he glove is the fiducial-tracked replica of the YAM's gripper \citep{i2rtyam} from \citet{yamumi2026}: the robot's own fingers on a rack-and-pinion linear mechanism, an 11-face \SI{15}{mm} ArUco \citep{garrido2014aruco} dodecahedron on the back of the hand in the manner of DodecaPen \citep{wu2017dodecapen} and, on each jaw, a printed \emph{tail}: a wedge behind the finger carrying \SI{12}{mm} AprilTags on five faces, beside a fixed tag on the gripper back.
 
-**Verdict:** source unavailable
+**Verdict:** supported
 
-**Resolution:** Open: paywalled (Elsevier), no legal open copy. Needs a copy via the UH library in resources/library/garrido2014aruco/.
+**Resolution:** Supported (PDF supplied by hand): ArUco is a square binary fiducial system designed for camera pose estimation.
 
 **Sources:**
 
-- `garrido2014aruco`: not obtained; https://doi.org/10.1016/j.patcog.2014.01.005 — Unpaywall (api.unpaywall.org, email molybog@hawaii.edu) reports oa_status closed with no OA locations. AVA Cordoba group portfolio page (uco.es/investiga/grupos/ava/portfolio/aruco/) has no PDF link. UJaen repository record (investigacion.ujaen.es/documentos/61ff0efb13638e1cfc27ec0d) has metadata only, no file. A web search surfaced a publisher-typeset PDF on cs-courses.mines.edu/csci507/schedule/24/ArUco.pdf; it was downloaded and its text extracted, but its redistribution status could not be confirmed as open, so it was deleted and not used. No text quotes are given. README.md in the library directory records these attempts.
+- `garrido2014aruco`: `library/garrido2014aruco/paper.pdf`; https://doi.org/10.1016/j.patcog.2014.01.005 — publisher PDF, downloaded by hand by Igor via library access on 2026-10-16
 
-**Agent's note:** Could not obtain a legitimate open copy of Garrido-Jurado et al. 2014, so S14 is unverified and no quotes are given. The claim is that ArUco is a square binary fiducial marker system (dictionary generation and detection) whose markers give the camera pose. Nothing in the library directory supports this yet. To check it, obtain the author's accepted manuscript from the AVA group or an institutional repository, or check the paper's abstract and introduction in a copy that the library can legitimately hold. The paper's topic (dictionary generation, detection, camera pose estimation) appears consistent with the claim, but that is from a non-retained copy and is not a quote. The dodecahedron and 15 mm size in the sentence are not covered by this citation and would need another source.
+**Quotes:**
+
+- `garrido2014aruco`, Abstract — supports: fiducial system for camera pose — *verified by hand*
+
+  > This paper presents a fiducial marker system specially appropriated for camera pose estimation in applications such as augmented reality and robot localization.
+
+- `garrido2014aruco`, Abstract — supports: square binary markers; dictionary generation and detection — *verified by hand*
+
+  > we derive the maximum theoretical inter-marker distance that dictionaries of square binary markers can have. Second, a method for automatically detecting the markers and correcting possible errors is proposed.
+
+- `garrido2014aruco`, Section 1 Introduction — supports: square markers give the camera pose from their corners — *verified*
+
+  > The reason why is that they allow us to extract the camera pose from their four corners, given that the camera is properly calibrated.
+
+**Agent's note:** Checked in the main loop after Igor supplied the PDF (the agent found no legal open copy). Supports the claim as worded: ArUco is a square binary fiducial marker system (dictionary generation, detection with error correction) designed for camera pose estimation. The dodecahedron and 15 mm size in the sentence are ours, not this paper's.
 
 ## S15 (§2)
 
