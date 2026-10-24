@@ -9,6 +9,10 @@ arm's linear gripper**.
 > [2.5-minute video](media/yam-umi-paper-video.mp4) ·
 > [LaTeX source and figures](paper/)
 
+> **Follow-up:** [head-cam-umi](https://github.com/YosubShin/head-cam-umi) drops the wrist camera and the
+> fixed tracker: one head-worn camera labels an electronics-free version of this glove and observes the
+> policy. Paper: *A Head Camera Is (Almost) All You Need* (arXiv, 2026).
+
 <p align="center">
   <img src="media/glove-on-hand.jpg" alt="YAM-UMI glove on a hand: the robot's gripper fingers on a printed body, the fiducial ball, marker cubes and the wrist fisheye" height="270">
   <a href="media/glove-collection-demo.mp4"><img src="media/glove-collection-1p5x.gif" alt="Collecting a pick-and-place demonstration with the glove, 1.5x speed" height="270"></a>
@@ -108,7 +112,7 @@ The evaluated setup uses a fixed external camera to recover absolute pose from
 fiducials, without SLAM or an IMU. The wrist fisheye records the grasp and reads
 the tip markers for aperture. Recording, calibration, labelling, and dataset
 construction are provided by
-[forward-cam-umi](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/README.md).
+[head-cam-umi](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/README.md).
 
 ### Dodecahedral wrist tracker
 
@@ -218,7 +222,7 @@ unit to recover its face-to-ID mapping and account for printing and placement
 tolerances.
 
 The marker sheet also carries tail and base markers for
-[forward-cam-umi](https://github.com/YosubShin/forward-cam-umi), which provide
+[head-cam-umi](https://github.com/YosubShin/head-cam-umi), which provide
 occlusion backup and external-camera aperture measurements. These require
 additional printed parts; see
 [optional forward-camera extensions](pos-tracking/README.md#optional-forward-camera-extensions).
@@ -244,7 +248,7 @@ printer, filament, and insert alignment; `v3` worked best in the reference build
 
 - **Glove collection and training:** about 170 glove episodes have been
   collected and processed with the
-  [forward-cam-umi workflow](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/README.md).
+  [head-cam-umi workflow](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/README.md).
   The [paper](paper/main.pdf) evaluates 165 glove episodes and 185 teleoperated
   episodes. Adding glove data lowers validation loss, but does not significantly
   improve rollout success in the reported evaluation.
@@ -255,7 +259,7 @@ printer, filament, and insert alignment; `v3` worked best in the reference build
   [`pos-tracking/dynamic-accuracy.md`](pos-tracking/dynamic-accuracy.md).
 - **Calibration:** camera intrinsics, ball geometry, and gripper-marker
   calibration commands are published in
-  [forward-cam-umi](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/README.md).
+  [head-cam-umi](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/README.md).
   Robot-side hand-eye calibration and dataset construction also require the
   robot's kinematics.
 - **Aperture calibration:** caliper measurements at several openings across the

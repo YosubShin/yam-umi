@@ -1,0 +1,192 @@
+\begin{thebibliography}{26}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Chi et~al.(2024)Chi, Xu, Pan, Cousineau, Burchfiel, Feng, Tedrake, and
+  Song]{chi2024umi}
+C.~Chi, Z.~Xu, C.~Pan, E.~Cousineau, B.~Burchfiel, S.~Feng, R.~Tedrake, and
+  S.~Song.
+\newblock Universal manipulation interface: In-the-wild robot teaching without
+  in-the-wild robots.
+\newblock In \emph{Robotics: Science and Systems (RSS)}, 2024.
+
+\bibitem[Campos et~al.(2021)Campos, Elvira, Rodr{\'\i}guez, Montiel, and
+  Tard{\'o}s]{campos2021orbslam3}
+C.~Campos, R.~Elvira, J.~J.~G. Rodr{\'\i}guez, J.~M.~M. Montiel, and J.~D.
+  Tard{\'o}s.
+\newblock {ORB-SLAM3}: An accurate open-source library for visual,
+  visual-inertial, and multimap {SLAM}.
+\newblock \emph{IEEE Transactions on Robotics}, 37\penalty0 (6):\penalty0
+  1874--1890, 2021.
+
+\bibitem[Zhaxizhuoma et~al.(2024)Zhaxizhuoma, Liu, Guan, Jia, Wu, Liu, Wang,
+  Liang, Chen, Zhang, Song, Qu, Wang, Wang, Cao, Ding, Zhao, and
+  Li]{fastumi2024}
+Zhaxizhuoma, K.~Liu, C.~Guan, Z.~Jia, Z.~Wu, X.~Liu, T.~Wang, S.~Liang,
+  P.~Chen, P.~Zhang, H.~Song, D.~Qu, D.~Wang, Z.~Wang, N.~Cao, Y.~Ding,
+  B.~Zhao, and X.~Li.
+\newblock Fastumi: A scalable and hardware-independent universal manipulation
+  interface with dataset.
+\newblock \emph{arXiv preprint arXiv:2409.19499}, 2024.
+
+\bibitem[Ohkawa et~al.(2026)Ohkawa, Arima, Noguchi, Tateno, Sugiura, Okubo,
+  Ikeuchi, Shin, Nishizawa, Kanazawa, Wakayama, Fukunaga, Makihara, Motoda,
+  Erich, Domae, Matsushima, Okumatsu, and Ota]{yubi2026}
+T.~Ohkawa, J.~Arima, Y.~Noguchi, M.~Tateno, M.~Sugiura, T.~Okubo, K.~Ikeuchi,
+  Y.~Shin, H.~Nishizawa, N.~Kanazawa, Y.~Wakayama, D.~Fukunaga, K.~Makihara,
+  T.~Motoda, F.~Erich, Y.~Domae, T.~Matsushima, Y.~Okumatsu, and K.~Ota.
+\newblock Yubi: Yielding universal bidigital interface for bimanual dexterous
+  manipulation at scale.
+\newblock \emph{arXiv preprint arXiv:2606.10244}, 2026.
+
+\bibitem[vovw(2026)]{tinyumi2026}
+vovw.
+\newblock tinyumi: a hand-worn, 3d-printable gripper based on yam-umi.
+\newblock \url{https://github.com/vovw/tinyumi}, 2026.
+
+\bibitem[Banaszczyk et~al.(2024)Banaszczyk, {\L}ysakowski, Nowicki,
+  Skrzypczy{\'n}ski, and Tadeja]{vrtracking2024}
+A.~Banaszczyk, M.~{\L}ysakowski, M.~R. Nowicki, P.~Skrzypczy{\'n}ski, and S.~K.
+  Tadeja.
+\newblock How accurate is the positioning in {VR}? using motion capture and
+  robotics to compare positioning capabilities of popular {VR} headsets.
+\newblock \emph{arXiv preprint arXiv:2412.06116}, 2024.
+
+\bibitem[Carnevale et~al.(2022)Carnevale, Mannocchi, Hadj~Sassi, Carli,
+  De~Luca, Longo, Denaro, and Schena]{quest2rehab2022}
+A.~Carnevale, I.~Mannocchi, M.~S. Hadj~Sassi, M.~Carli, G.~De~Luca, U.~G.
+  Longo, V.~Denaro, and E.~Schena.
+\newblock Virtual reality for shoulder rehabilitation: Accuracy evaluation of
+  {Oculus Quest 2}.
+\newblock \emph{Sensors}, 22\penalty0 (15):\penalty0 5511, 2022.
+
+\bibitem[Shin(2026)]{yamumi2026}
+Y.~Shin.
+\newblock Yam-umi: hand-worn data collection device for the i2rt yam linear
+  gripper.
+\newblock \url{https://github.com/YosubShin/yam-umi}, 2026.
+
+\bibitem[Hsu et~al.(2022)Hsu, Kim, Rafailov, Wu, and Finn]{hsu2022hands}
+K.~Hsu, M.~J. Kim, R.~Rafailov, J.~Wu, and C.~Finn.
+\newblock Vision-based manipulators need to also see from their hands.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2022.
+
+\bibitem[{AIRoA}(2026)]{umiarena2026}
+{AIRoA}.
+\newblock The {UMI} arena: {CoRL} 2026 workshop.
+\newblock \url{https://umi-arena.airoa.io/}, 2026.
+
+\bibitem[Land and Hayhoe(2001)]{land2001eye}
+M.~F. Land and M.~Hayhoe.
+\newblock In what ways do eye movements contribute to everyday activities?
+\newblock \emph{Vision Research}, 41\penalty0 (25--26):\penalty0 3559--3565,
+  2001.
+
+\bibitem[Olson(2011)]{olson2011apriltag}
+E.~Olson.
+\newblock {AprilTag}: A robust and flexible visual fiducial system.
+\newblock In \emph{IEEE International Conference on Robotics and Automation
+  (ICRA)}, pages 3400--3407, 2011.
+
+\bibitem[Kareer et~al.(2025)Kareer, Patel, Punamiya, Mathur, Cheng, Wang,
+  Hoffman, and Xu]{kareer2025egomimic}
+S.~Kareer, D.~Patel, R.~Punamiya, P.~Mathur, S.~Cheng, C.~Wang, J.~Hoffman, and
+  D.~Xu.
+\newblock {EgoMimic}: Scaling imitation learning via egocentric video.
+\newblock In \emph{IEEE International Conference on Robotics and Automation
+  (ICRA)}, pages 13226--13233, 2025.
+
+\bibitem[Chuang et~al.(2025)Chuang, Lee, Gao, Naddaf-Sh, and
+  Soltani]{chuang2025avaloha}
+I.~Chuang, A.~Lee, D.~Gao, M.-M. Naddaf-Sh, and I.~Soltani.
+\newblock Active vision might be all you need: Exploring active vision in
+  bimanual robotic manipulation.
+\newblock In \emph{IEEE International Conference on Robotics and Automation
+  (ICRA)}, pages 7952--7959, 2025.
+
+\bibitem[Cheng et~al.(2024)Cheng, Li, Yang, Yang, and
+  Wang]{cheng2024opentelevision}
+X.~Cheng, J.~Li, S.~Yang, G.~Yang, and X.~Wang.
+\newblock {Open-TeleVision}: Teleoperation with immersive active visual
+  feedback.
+\newblock In \emph{Conference on Robot Learning (CoRL)}, volume 270 of
+  \emph{Proceedings of Machine Learning Research}, pages 2729--2749, 2024.
+
+\bibitem[{I2RT Robotics}(2026)]{i2rtyam}
+{I2RT Robotics}.
+\newblock Yam 6-dof arm.
+\newblock \url{https://i2rt.com/products/yam-6-dof-arm}, 2026.
+
+\bibitem[Garrido-Jurado et~al.(2014)Garrido-Jurado, Mu{\~n}oz-Salinas,
+  Madrid-Cuevas, and Mar{\'\i}n-Jim{\'e}nez]{garrido2014aruco}
+S.~Garrido-Jurado, R.~Mu{\~n}oz-Salinas, F.~J. Madrid-Cuevas, and M.~J.
+  Mar{\'\i}n-Jim{\'e}nez.
+\newblock Automatic generation and detection of highly reliable fiducial
+  markers under occlusion.
+\newblock \emph{Pattern Recognition}, 47\penalty0 (6):\penalty0 2280--2292,
+  2014.
+
+\bibitem[Wu et~al.(2017)Wu, Wang, Kin, Twigg, Han, Yang, and
+  Chien]{wu2017dodecapen}
+P.-C. Wu, R.~Wang, K.~Kin, C.~Twigg, S.~Han, M.-H. Yang, and S.-Y. Chien.
+\newblock {DodecaPen}: Accurate {6DoF} tracking of a passive stylus.
+\newblock In \emph{ACM Symposium on User Interface Software and Technology
+  (UIST)}, pages 365--374, 2017.
+
+\bibitem[{TheRobotStudio} and {Hugging Face}(2025)]{so101}
+{TheRobotStudio} and {Hugging Face}.
+\newblock {SO-ARM100 / SO-101}: a low-cost 3d-printed robot arm.
+\newblock \url{https://github.com/TheRobotStudio/SO-ARM100}, 2025.
+
+\bibitem[Zhao et~al.(2023)Zhao, Kumar, Levine, and Finn]{zhao2023act}
+T.~Z. Zhao, V.~Kumar, S.~Levine, and C.~Finn.
+\newblock Learning fine-grained bimanual manipulation with low-cost hardware.
+\newblock \emph{Robotics: Science and Systems (RSS)}, 2023.
+
+\bibitem[Cadene et~al.(2024)Cadene, Alibert, Soare, Gallouedec, Zouitine, and
+  Wolf]{lerobot2024}
+R.~Cadene, S.~Alibert, A.~Soare, Q.~Gallouedec, A.~Zouitine, and T.~Wolf.
+\newblock Lerobot: State-of-the-art machine learning for real-world robotics in
+  pytorch.
+\newblock \url{https://github.com/huggingface/lerobot}, 2024.
+
+\bibitem[Fu et~al.(2024)Fu, Zhao, and Finn]{fu2024mobilealoha}
+Z.~Fu, T.~Z. Zhao, and C.~Finn.
+\newblock Mobile {ALOHA}: Learning bimanual mobile manipulation using low-cost
+  whole-body teleoperation.
+\newblock In \emph{Conference on Robot Learning (CoRL)}, volume 270 of
+  \emph{Proceedings of Machine Learning Research}, pages 4066--4083, 2024.
+
+\bibitem[Mandlekar et~al.(2021)Mandlekar, Xu, Wong, Nasiriany, Wang, Kulkarni,
+  Fei-Fei, Savarese, Zhu, and Mart{\'\i}n-Mart{\'\i}n]{mandlekar2021robomimic}
+A.~Mandlekar, D.~Xu, J.~Wong, S.~Nasiriany, C.~Wang, R.~Kulkarni, L.~Fei-Fei,
+  S.~Savarese, Y.~Zhu, and R.~Mart{\'\i}n-Mart{\'\i}n.
+\newblock What matters in learning from offline human demonstrations for robot
+  manipulation.
+\newblock In \emph{Conference on Robot Learning (CoRL)}, volume 164 of
+  \emph{Proceedings of Machine Learning Research}, pages 1678--1690, 2021.
+
+\bibitem[Triggs et~al.(2000)Triggs, McLauchlan, Hartley, and
+  Fitzgibbon]{triggs2000bundle}
+B.~Triggs, P.~F. McLauchlan, R.~I. Hartley, and A.~W. Fitzgibbon.
+\newblock Bundle adjustment -- a modern synthesis.
+\newblock In \emph{Vision Algorithms: Theory and Practice}, volume 1883 of
+  \emph{Lecture Notes in Computer Science}, pages 298--372, 2000.
+
+\bibitem[Shin(2026)]{forwardcamumi2026}
+Y.~Shin.
+\newblock forward-cam-umi: fiducial labelling, recording and dataset tools for
+  fixed and head-worn cameras.
+\newblock \url{https://github.com/YosubShin/forward-cam-umi}, 2026.
+
+\bibitem[Shah(2013)]{shah2013robotworld}
+M.~Shah.
+\newblock Solving the robot-world/hand-eye calibration problem using the
+  {Kronecker} product.
+\newblock \emph{Journal of Mechanisms and Robotics}, 5\penalty0 (3), 2013.
+
+\end{thebibliography}

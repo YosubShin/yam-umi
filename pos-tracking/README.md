@@ -13,7 +13,7 @@ confining collection to that camera's view. Ball markers use the
 **`DICT_4X4_100`** dictionary, IDs 25–35; IDs 36–49 are for the
 forward-camera extension described below. IDs 0–24 are reserved for the
 robot-mounted ball used to validate tracking against forward kinematics (see
-[forward-cam-umi](https://github.com/YosubShin/forward-cam-umi)).
+[head-cam-umi](https://github.com/YosubShin/head-cam-umi)).
 
 <p align="center">
   <img src="../media/assembly-with-tracker.jpg" alt="The assembled YAM-UMI gripper with the dodecahedral ArUco marker ball mounted on its wrist stalk" width="560">
@@ -48,7 +48,7 @@ the *dodecahedron ball* group and the *tips WRIST* group
 
 The right-hand column contains the *tails* (BACK, TOP, FORWARD, OUTSIDE,
 BOTTOM) and *base* (BACK, TOP) groups, IDs 36–49. They belong to the
-[forward-cam-umi extensions](https://github.com/YosubShin/forward-cam-umi):
+[head-cam-umi extensions](https://github.com/YosubShin/head-cam-umi):
 extra markers and printed parts provide an occlusion backup for the ball
 and let the external camera measure aperture. They are not required for
 the basic wrist-camera-and-ball assembly. Follow the companion repository
@@ -86,7 +86,7 @@ rather than becoming permanent error, and it means **your ball's mapping will
 differ from anyone else's** — the calibration output is specific to the physical
 unit you built and has to travel with it.
 
-Follow [forward-cam-umi steps 2–6](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/README.md)
+Follow [head-cam-umi steps 2–6](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/README.md)
 for camera setup, intrinsics, a rotation take, detection, and ball geometry
 solving. Use the measured marker size and keep the solved geometry with
 that physical ball. Moving, re-sticking, or swapping a marker requires
@@ -174,7 +174,7 @@ Hard-won caveats that travel with this camera class:
 Refocusing changes the imaging parameters used by the pose solver.
 
 The **B0587** focuses mechanically: rotate the lens barrel while viewing the
-live meter in [focus_tune.py](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/focus_tune.py),
+live meter in [focus_tune.py](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/focus_tune.py),
 then mark the barrel and leave it fixed. Its `focus_absolute` control can be
 accepted without changing focus; do not rely on that control for this module.
 
@@ -231,7 +231,7 @@ Measure and prepare the finger group separately using the procedure above.
 In the reference build, each marker sits on the **top of the finger,
 30 mm from its root**, facing the wrist camera. Keep the entire tile flat
 and both markers visible throughout the full opening. Check detection
-with [tag_contrast.py](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/tag_contrast.py).
+with [tag_contrast.py](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/tag_contrast.py).
 If repositioning a marker after calibration, repeat the affected geometry
 and aperture calibration. See the
 [assembly instructions](../docs/assembly.md#apply-the-gripper-tip-markers).

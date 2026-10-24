@@ -176,7 +176,7 @@ Each handle has a curved finger cradle, a strap opening, and mounting holes in i
 3. Start both screws in their threads, then tighten them gradually, alternating between them, until the gripper finger sits flush against the bracket. Do not use screw-tightening force to pull misaligned holes into position.
 4. Assemble the other side in the same way, with the rubber gripping surfaces facing each other.
 
-The extra plate and protruding cylinder between the screw heads and the gripper finger in the photo belong to the [forward-camera experiment](https://github.com/YosubShin/forward-cam-umi). Omit those parts for this assembly and select screw lengths for the actual finger, bracket, and handle stack.
+The extra plate and protruding cylinder between the screw heads and the gripper finger in the photo belong to the [forward-camera experiment](https://github.com/YosubShin/head-cam-umi). Omit those parts for this assembly and select screw lengths for the actual finger, bracket, and handle stack.
 
 ![Connection orientation and the two M4 mounting screws between the gripper finger and L bracket](../media/assembly/jaw-fasteners.jpg)
 
@@ -235,7 +235,7 @@ Roughly adjust the lens until the fingers and working area are clear; perform fi
 
 ## 6. Marker-Ball Tracking Assembly (Optional)
 
-A fixed external camera reads the printed patterns on the marker ball to estimate the gripper's position and orientation. The software is in the companion [forward-cam-umi repository](https://github.com/YosubShin/forward-cam-umi). If this is your pose source, install the extension bracket, rod mount, rod, and marker ball described below.
+A fixed external camera reads the printed patterns on the marker ball to estimate the gripper's position and orientation. The software is in the companion [forward-cam-umi repository](https://github.com/YosubShin/head-cam-umi). If this is your pose source, install the extension bracket, rod mount, rod, and marker ball described below.
 
 Skip the marker-ball assembly if you use another pose source:
 
@@ -279,7 +279,7 @@ Printers rescale by a few percent and the error is not visible by eye; we have s
 
 1. Print at 100 % / Actual size on **matte** paper or label stock. No glossy paper.
 2. **Before cutting**, caliper the **black square** of a marker — not the white outline, which is where you cut. Measure six times across different markers of the group, alternating width and height, and average.
-3. Write the number down per group. It goes into your unit's marker map (`calib/marker_map_glove_<unit>.json`, see [forward-cam-umi §1](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/README.md#1-measurements--one-caliper-reading-per-printed-group)) and into the ball calibration; a nominal value silently corrupts every pose.
+3. Write the number down per group. It goes into your unit's marker map (`calib/marker_map_glove_<unit>.json`, see [forward-cam-umi §1](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/README.md#1-measurements--one-caliper-reading-per-printed-group)) and into the ball calibration; a nominal value silently corrupts every pose.
 
 ### Apply the ball markers
 
@@ -293,18 +293,18 @@ Adhesive matters more than it looks, because the solver measures the marker's **
 
 ### Apply the gripper-tip markers
 
-Two **6 mm AprilTag 16h5 markers, IDs 2 and 3**, go on the **top of the gripper fingers**, one per jaw, where the wrist camera sees them; we placed them **30 mm from the root of the finger**. They give the wrist camera a metric reading of the jaw opening, so they are needed for wrist-camera policies too, not only for ball tracking. Same rules as above: caliper before cutting (6 mm nominal), matte paper, full-back double-sided tape, no glue, nothing over the face. Both tips must stay visible to the wrist camera across the full opening; check with [`tag_contrast.py`](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/tag_contrast.py) after installing.
+Two **6 mm AprilTag 16h5 markers, IDs 2 and 3**, go on the **top of the gripper fingers**, one per jaw, where the wrist camera sees them; we placed them **30 mm from the root of the finger**. They give the wrist camera a metric reading of the jaw opening, so they are needed for wrist-camera policies too, not only for ball tracking. Same rules as above: caliper before cutting (6 mm nominal), matte paper, full-back double-sided tape, no glue, nothing over the face. Both tips must stay visible to the wrist camera across the full opening; check with [`tag_contrast.py`](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/tag_contrast.py) after installing.
 
 The tails and bases groups in the right column of the sheet belong to the forward-camera extension (occlusion backup for the ball) and are not needed otherwise.
 
 ### The forward camera: mount, focus, calibrate, solve the ball
 
-Marker-ball tracking needs one fixed camera over the workspace (we use an Arducam B0587 4K). The full procedure with commands is [forward-cam-umi, steps 2–6](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/README.md); in short:
+Marker-ball tracking needs one fixed camera over the workspace (we use an Arducam B0587 4K). The full procedure with commands is [forward-cam-umi, steps 2–6](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/README.md); in short:
 
 1. **Mount it rigidly** so it cannot move between calibration and recording. Aim it at the full working area so the ball stays in frame when the gripper is raised or rotated, with headroom above the workspace (the ball is the highest point on the gripper), and avoid prolonged occlusion by your hand or the camera cable.
-2. **Focus** with the live meter ([`focus_tune.py`](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/focus_tune.py)) on a marker at working distance, then mark the barrel; refocusing later means recalibrating.
-3. **Intrinsics** from a ChArUco board ([`calibrate_uvc.py`](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/calibrate_uvc.py)), with the board's squares calipered like the markers.
-4. **Solve the ball** from one slow rotation take ([`bundle_dodeca.py`](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/bundle_dodeca.py), [`bundle_dodeca_ideal.py`](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/bundle_dodeca_ideal.py)), then the jaw-marker geometry ([`calibrate_gripper_bundle.py`](https://github.com/YosubShin/forward-cam-umi/blob/main/scripts/calibrate_gripper_bundle.py)). Store the results with the unit.
+2. **Focus** with the live meter ([`focus_tune.py`](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/focus_tune.py)) on a marker at working distance, then mark the barrel; refocusing later means recalibrating.
+3. **Intrinsics** from a ChArUco board ([`calibrate_uvc.py`](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/calibrate_uvc.py)), with the board's squares calipered like the markers.
+4. **Solve the ball** from one slow rotation take ([`bundle_dodeca.py`](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/bundle_dodeca.py), [`bundle_dodeca_ideal.py`](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/bundle_dodeca_ideal.py)), then the jaw-marker geometry ([`calibrate_gripper_bundle.py`](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/calibrate_gripper_bundle.py)). Store the results with the unit.
 
 Measured on the real robot, this stack tracks the gripper to 7.7 mm / 1.7° median against the arm's own kinematics — see [`pos-tracking/dynamic-accuracy.md`](../pos-tracking/dynamic-accuracy.md).
 
