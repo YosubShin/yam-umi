@@ -11,7 +11,7 @@ arm's linear gripper**.
 
 > **Follow-up:** [head-cam-umi](https://github.com/YosubShin/head-cam-umi) drops the wrist camera and the
 > fixed tracker: one head-worn camera labels an electronics-free version of this glove and observes the
-> policy. Paper: *A Head Camera Is (Almost) All You Need* (arXiv, 2026).
+> policy. Paper: [*A Head Camera Is (Almost) All You Need*](https://arxiv.org/abs/2610.27622) (arXiv:2610.27622, 2026).
 
 <p align="center">
   <img src="media/glove-on-hand.jpg" alt="YAM-UMI glove on a hand: the robot's gripper fingers on a printed body, the fiducial ball, marker cubes and the wrist fisheye" height="270">
