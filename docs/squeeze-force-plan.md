@@ -96,6 +96,17 @@ full squeeze, so the spring saw ~88 N and was on its compression stop; a TL spri
 intent. Still wanted: the same reading for a *normal* hold on the block, which sets whether the
 1 mm threshold sits below it); calibrate the installed spring with a hung weight.
 
+## Spring version: first measurements (2026-10-31 / 11-01)
+
+- **Weight: 410 g** for the head-cam variant with the spring mechanism: no electronics, dodeca
+  ball, tail markers and gripper-back markers on. (The README's 355 g / 318 g is the v1 glove with
+  the wrist camera, with / without its cable; the head-cam v1 glove was never weighed separately.)
+- **Lift: a half gallon of water (~1.9 kg with the jug) held comfortably, no sagging.** The v1
+  README row reads "1 kg by a jug handle, 1.5 kg slips, 2 kg no", so the spring version holds
+  what v1 could not; the robot's own gripper is rated 1.5 kg / 2 kg. Update the README's
+  Ergonomics and Strength rows when the spring version is released.
+- **Full squeeze: 4.5 kg (44 N)** at the fingers on a kitchen scale (see Spring sizing above).
+
 ## Software to-dos
 
 - [ ] `yam_zmq_host.py`: publish gripper torque / position error per frame (`effort.gripper`),
