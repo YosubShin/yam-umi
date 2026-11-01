@@ -1,6 +1,9 @@
 # Squeeze-force channel for the glove: ideas and to-dos
 
-Status: parked (2026-10-12) while the head-camera work runs. Nothing here is built yet.
+Status: parked (2026-10-12) while the head-camera work ran. 2026-10-31: the spring version
+of the glove is printed (whole glove reprinted; the four gripper-back markers were re-applied on
+the new print, caliper 12.11 mm, every other marker unchanged), so the back-marker bundle and the
+tool frame need a re-solve at the next session; software below is still to do.
 
 ## Why
 
@@ -87,8 +90,11 @@ So:
 
 Spring sizing: threshold ≈ 1 mm, stop at 2 mm. With TL at ~8 N/mm: 8 N at 1 mm / 16 N at 2 mm
 on the spring = 4 / 8 N at the fingers. Pick the class from the measured squeeze force
-(TODO: kitchen-scale readings of a normal hold with the glove); calibrate the installed spring
-with a hung weight.
+(kitchen-scale reading, 2026-10-31, spring version: **4.5 kg ≈ 44 N** pinch at the fingers at
+full squeeze, so the spring saw ~88 N and was on its compression stop; a TL spring's 2 mm stop,
+8 N at the fingers, is reached at under a fifth of what the hand can deliver, which is the
+intent. Still wanted: the same reading for a *normal* hold on the block, which sets whether the
+1 mm threshold sits below it); calibrate the installed spring with a hung weight.
 
 ## Software to-dos
 
@@ -105,7 +111,8 @@ with a hung weight.
 
 ## Open questions
 
-- Squeeze force of a normal hold on the glove (sets the spring class).
+- Squeeze force of a normal hold on the glove (sets the spring class). Full squeeze measured at
+  4.5 kg (44 N) on 2026-10-31; the normal-hold reading is still open.
 - Whether the window faces up or sideways (which camera sees the rail area during a grasp).
 - Whether the YAM gripper's lead-screw friction leaves a dead band large enough to matter at the
   flag threshold (expected 1–2 N; measure once the host publishes torque).
