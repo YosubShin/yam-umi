@@ -98,9 +98,9 @@ intent. Still wanted: the same reading for a *normal* hold on the block, which s
 
 ## Spring version: first measurements (2026-10-31 / 11-01)
 
-- **Weight: 410 g** for the head-cam variant with the spring mechanism: no electronics, dodeca
+- **Weight: 399 g** (2026-11-11; 410 g at first build) for the head-cam variant with the spring mechanism: no electronics, dodeca
   ball, tail markers and gripper-back markers on. (The README's 355 g / 318 g is the v1 glove with
-  the wrist camera, with / without its cable; the head-cam v1 glove was never weighed separately.)
+  the wrist camera, with / without its cable; the head-cam v1 glove without the spring weighs 370 g, 2026-11-10.)
 - **Lift: a half gallon of water (~1.9 kg with the jug) held comfortably, no sagging.** The v1
   README row reads "1 kg by a jug handle, 1.5 kg slips, 2 kg no", so the spring version holds
   what v1 could not; the robot's own gripper is rated 1.5 kg / 2 kg. Update the README's
