@@ -128,7 +128,12 @@ In this revision the adapter and the L bracket are clamped to the carriage by th
 2. Secure each side with four M3 × 16 mm screws, starting all four before tightening any. Tighten gradually in a cross pattern until the bracket and adapter sit flat on the carriage. If a screw stops early, it is reaching the rail through the carriage: use a shorter one rather than forcing it, because a screw that presses on the rail jams the carriage. If the heads sit proud or the screws barely grip, check that the counterbores printed to their full 3.5 mm depth.
 3. Move each side independently to check that it still slides smoothly along its rail and does not interfere with the lips of the base plate or the rail ends.
 
-![One jaw side, exploded: handle, rack adapter and L bracket](../media/assembly/cad/jaw-exploded.png)
+<p align="center">
+  <img src="../media/assembly/cad/jaw-exploded.png" width="48%" alt="One jaw side, exploded: handle lifted along its screws, L bracket pulled off the back of the rack adapter">
+  <img src="../media/assembly/cad/jaw-assembled.png" width="48%" alt="The same jaw side assembled: handle straddling the end of the rack adapter, L bracket bolted to its back">
+</p>
+
+*One jaw side: exploded along the screw axes (left) and assembled (right).*
 
 ### Install the Central Pinion
 
