@@ -28,7 +28,7 @@ stalk, held clear of the hand and of the fisheye camera's view.</em></p>
 | `dodeca_marker_ball_v2` | 51.05 across | Regular dodecahedron; carries the 15 mm markers |
 | `stalk_rod_80mm` | 8 × 8 × 80 | Rod holding the ball clear of the hand |
 | `wrist_stalk_arc_adapter` | 44 × 14 × 49.8 | Mounts the stalk to the wrist |
-| `arc_extender` | 43.5 × 41.5 × 57 | Extends the arc mount |
+| `arc_extender` | 50 × 41.5 × 65 | Extends the arc mount; bolts to the back of `plate_v7` with four M3 screws (November 2026 revision; it takes the space of the optional fisheye mount) |
 
 A dodecahedron is used so that at least one face is well-conditioned for pose
 estimation from any viewing direction, which removes the orientation blind spots

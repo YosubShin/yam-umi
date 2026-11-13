@@ -39,7 +39,14 @@ rather than a preference.
 > M3 kit in Prerequisites. Leave it slightly loose — see
 > [assembly](../docs/assembly.md).
 
-### Optics
+### Optics (optional wrist camera)
+
+The default build is electronics-free: the glove is read by one external
+camera (fixed beside the workspace, or head-worn), listed under
+[Also excluded](#also-excluded) because it is shared by every glove. The wrist
+fisheye below is the classic UMI view and the paper's aperture source. It
+**does not fit together with the current `arc_extender`**; see
+[Build configurations](../README.md#build-configurations) before buying one.
 
 | Part | Qty | Unit price | Link | Total |
 |---|---|---|---|---:|
@@ -55,11 +62,14 @@ rather than a preference.
 
 | | |
 |---|---:|
-| **Per gripper** | **~$79** |
-| Bimanual pair (2 grippers) | ~$157 |
+| **Per gripper, electronics-free** | **~$22** |
+| Bimanual pair (2 grippers) | ~$43 |
+| External camera, one per system (Arducam B0587, 4K) | ~$122 |
+| Per gripper with the wrist fisheye instead (not mountable with the current arc extender) | ~$79 |
 
-The wrist camera is roughly 72% of that. Everything else — rails, carriages,
-bearings, straps — comes to about $22.
+Rails, carriages, bearings and straps are the whole per-glove total. The camera
+that reads the glove is bought once per system, not per glove, and is listed
+under [Also excluded](#also-excluded) with the other shared items.
 
 ## Prerequisites
 
@@ -71,12 +81,13 @@ from nothing can see the real outlay.
 | Item | Used for | Indicative cost |
 |---|---|---:|
 | 3D printer | Printing the parts; PETG on a Bambu Lab X2D in the reference build | — |
-| PETG or PLA filament | ~65 g per gripper (90.6 cm³ solid volume) | ~$1.30 of a $19.99 / kg spool |
+| PETG or PLA filament | ~90 g per gripper body (127 cm³ solid volume: plate, two brackets, two adapters, two handles, pinion) plus ~65 g for the marker ball assembly (94 cm³) and ~15 g for the tails and back-marker holders, at the reference build's infill | ~$3.40 of a $19.99 / kg spool |
 | Soldering iron with heat-set insert tip | Installing the threaded inserts; many insert kits bundle one | — |
-| [M3 brass heat-set inserts](https://www.amazon.com/Threaded-Inserts-Assortment-Printing-Components/dp/B0DNHLGM8D), M3 × 5 mm × ⌀4 mm | M3 threads in the printed parts | $12.99 / 100 pc |
-| M4 brass heat-set inserts (match the seats in the v4 STEP file) | Gripper fastening with L bracket v4; replaces nuts | — |
-| [M3 button-head screw assortment](https://www.amazon.com/dp/B0FQJQNHF5) (840 pc, 8 lengths from 6–30 mm, hex wrench included) | General fastening, plus the pinion shaft screw | see listing |
-| [M4 bolt and nut assortment](https://www.amazon.com/Socket-Screw-Assortment-Stainless-Thread/dp/B01F5JI6N8) | M4 screws for gripper fastening; v4 uses heat-set inserts instead of nuts | $16.99 / kit |
+| [M3 brass heat-set inserts](https://www.amazon.com/Threaded-Inserts-Assortment-Printing-Components/dp/B0DNHLGM8D), M3 × 5 mm × ⌀4 mm | M3 threads in the printed parts: 12 per gripper (plate 8, adapters 4) plus the marker-ball assembly | $12.99 / 100 pc |
+| M4 brass heat-set inserts, ⌀5.6 mm seats (match `L_bracket_v5`) | Gripper-finger fastening, 2 per L bracket; replaces nuts | — |
+| M2 brass heat-set inserts, ⌀3.1 mm seats, and M2 × 6 mm screws | The two gripper-back marker holders, one each, in the ends of `plate_v7` | — |
+| [M3 button-head screw assortment](https://www.amazon.com/dp/B0FQJQNHF5) (840 pc, 8 lengths from 6–30 mm, hex wrench included) | General fastening, the handle screws (30 mm) and the pinion shaft screw | see listing |
+| [M4 bolt and nut assortment](https://www.amazon.com/Socket-Screw-Assortment-Stainless-Thread/dp/B01F5JI6N8) | M4 screws for gripper fastening into the bracket's heat-set inserts | $16.99 / kit |
 | [Scotch double-sided tape](https://www.amazon.com/dp/B0035LXTYU), 1/2 in × 250 in (3-pack) | Mounting the printed ArUco markers | see listing |
 | Matte white paper or label stock | Printing the marker sheets | ~$0.10 |
 | Calipers | Verifying marker sheets printed at 100% scale | — |
@@ -93,8 +104,9 @@ was used here. No affiliation.
 Two of the supplies are more particular than they look:
 
 - **Heat-set inserts.** Insert dimensions vary between sellers at the same thread
-  size. The M3 seats are drawn for **M3 × 5 mm long × 4 mm OD**. L bracket v4
-  also needs M4 inserts for gripper fastening; check their length and outside
+  size. The M3 seats are drawn for **M3 × 5 mm long × 4 mm OD**. `L_bracket_v5`
+  takes two M4 inserts in ⌀5.6 × 7 mm seats, and `plate_v7` takes two M2 inserts
+  in ⌀3.1 × 5 mm seats for the back-marker holders; check length and outside
   diameter against the seats in the STEP file before buying or printing.
 - **Double-sided tape**, specified over glue or edge tape because full-surface
   adhesion keeps the markers flat. A marker fixed only at its edges will curl, and
@@ -102,22 +114,40 @@ Two of the supplies are more particular than they look:
 
 The shopping links are for **assortment kits**; use the quantities and connection
 requirements in the [assembly guide](../docs/assembly.md) when selecting screws.
-All M3 screws in the base gripper and optional marker-ball assembly must be
-low-profile button-head screws. For the M4 finger screws, check both handle
-engagement and clearance from the opposite rack.
+All M3 screws in the gripper and the marker-ball assembly must be low-profile
+button-head screws. For the M4 finger screws, check thread engagement in the
+bracket inserts and clearance from the opposite rack.
+
+Screw counts per gripper, from the mated CAD of the November 2026 parts (the
+lengths marked † are derived from the CAD stack-ups and still to be confirmed
+on a built unit):
+
+| Screw | Qty | Where |
+|---|---:|---|
+| M3 × 8 button head | 4 | rails to plate, two per rail |
+| M3 × 16 button head | 8 | L bracket and adapter to the MGN9C carriage, four per side. The CAD stack is 5.1 mm of bracket under the head plus 7.5 mm of adapter, so a 16 mm screw leaves 3.4 mm for the carriage thread, which is all the MGN9C has above the rail; 14 mm grips too little and 18 mm reaches the rail |
+| M3 × 30 button head † | 4 | handle through the adapter into its inserts, two per side |
+| M3 × 16 button head | 1 | pinion axle through the two bearings |
+| M3 × 12 button head † | 4 | arc extender to the back of the plate |
+| M3 × 25 button head + M3 nut | 2 | rod mount to the arc extender |
+| M3 × 10 button head | 2 | rod to the rod mount and to the ball |
+| M4, two lengths | 4 | gripper fingers into the bracket inserts, see the guide |
+| M2 × 6 | 2 | gripper-back marker holders into the plate ends |
 
 ## Also excluded
 
-- The **external forward-facing camera** used to observe the dodecahedral wrist
-  tracker. This is a different camera from the wrist fisheye above, and it is
-  needed only for marker-based pose tracking — the SLAM path uses the wrist camera
-  alone. Any calibrated camera with a clear view of the workspace works, but
-  coverage varies a lot with field of view; see the measured comparison in
-  [`pos-tracking/README.md`](../pos-tracking/README.md). The cheaper of the two
-  cameras measured there is the
-  [Arducam B0591](https://www.amazon.com/dp/B0FX47YSJQ) (1080p30 HDR, 78° diagonal).
-  It is an autofocus module, and its focus **must be locked** via V4L2 before use —
-  see [`pos-tracking/README.md`](../pos-tracking/README.md).
+- The **external camera** that reads the glove: fixed and forward-facing, or
+  head-worn as in [head-cam-umi](https://github.com/YosubShin/head-cam-umi). It
+  is shared by every glove and every session, so it is not counted per gripper.
+  The reference unit is the **Arducam B0587** (4K STARVIS2, manual focus),
+  about **$122**, used both fixed and on the head strap; see
+  [`pos-tracking/README.md`](../pos-tracking/README.md#the-camera-that-ended-up-winning-arducam-b0587-4k-low-light).
+  Any calibrated camera with a clear view of the workspace works, but coverage
+  varies a lot with field of view; the cheaper
+  [Arducam B0591](https://www.amazon.com/dp/B0FX47YSJQ) (1080p30 HDR, 78° diagonal)
+  measured there is an autofocus module whose focus **must be locked** via V4L2
+  before use. Only the wrist-fisheye SLAM path, blocked at the moment, would do
+  without an external camera.
 - The YAM arm itself.
 
 ## Comparison
@@ -126,7 +156,8 @@ engagement and clearance from the opposite rack.
 figures are not directly comparable: that total amortises pack purchases down to a
 per-piece cost — $0.07 of an M3 kit, $2.52 of a filament spool — where the list
 above moves those to Prerequisites instead. Counted the same way, YAM-UMI comes to
-roughly **$81** against HandUMI's $110.
+roughly **$24** per glove electronics-free, plus the $122 camera shared by the
+system, against HandUMI's $110; the earlier wrist-camera build came to $81.
 
 The difference is structural rather than incidental. YAM-UMI drops the Feetech
 servo ($13.89), its controller ($10.60) and power supply ($10.00) — about $34 —

@@ -1,324 +1,211 @@
 # YAM-UMI
 
 An open-source, hand-worn [UMI](https://umi-gripper.github.io/)-style data
-collection device for the **[I2RT YAM](https://i2rt.com/products/yam-6-dof-arm)
-arm's linear gripper**.
+collection glove for the **[I2RT YAM](https://i2rt.com/products/yam-6-dof-arm)
+arm's linear gripper**. It carries the robot's own gripper fingers on the
+robot's own rail-and-pinion mechanism, and **no electronics**: one external
+camera, fixed beside the workspace or worn on the collector's head, reads its
+pose and jaw width from printed fiducials.
 
-> **Paper and video:**
-> [YAM-UMI: A Fiducial-Tracked Glove that Collects Metrically Labelled Demonstrations for the YAM](paper/main.pdf) (preprint) ·
-> [2.5-minute video](media/yam-umi-paper-video.mp4) ·
-> [LaTeX source and figures](paper/)
-
-> **Follow-up:** [head-cam-umi](https://github.com/YosubShin/head-cam-umi) drops the wrist camera and the
-> fixed tracker: one head-worn camera labels an electronics-free version of this glove and observes the
-> policy. Paper: [*A Head Camera Is (Almost) All You Need*](https://arxiv.org/abs/2610.27622) (arXiv:2610.27622, 2026).
+> **Paper:** [YAM-UMI: A Fiducial-Tracked Glove that Collects Metrically Labelled Demonstrations for the YAM](paper/main.pdf) ·
+> [2.5-minute video](media/yam-umi-paper-video.mp4) · [LaTeX source](paper/)
 >
-> Both were shown at *The UMI Arena* workshop, CoRL 2026 (device entry D10): [demo loop](https://github.com/YosubShin/head-cam-umi/blob/main/media/demo-loop.mp4), [poster](https://github.com/YosubShin/head-cam-umi/blob/main/paper/poster/poster.pdf).
+> **Follow-up:** [head-cam-umi](https://github.com/YosubShin/head-cam-umi) — one head-worn camera labels this glove
+> and is the policy's camera ([arXiv:2610.27622](https://arxiv.org/abs/2610.27622)). Both were shown at
+> *The UMI Arena*, CoRL 2026, device entry D10
+> ([demo loop](https://github.com/YosubShin/head-cam-umi/blob/main/media/demo-loop.mp4),
+> [poster](https://github.com/YosubShin/head-cam-umi/blob/main/paper/poster/poster.pdf)).
+>
+> **Coming soon:** the spring variant shown at the workshop, which turns the squeeze into a grip-force
+> label read from the same camera frame. It shares every part released here except the sprung carriage
+> adapter and its slit indicator; parts and calibration follow once its experiments are done.
 
 <p align="center">
   <img src="media/glove-on-hand.jpg" alt="YAM-UMI glove on a hand: the robot's gripper fingers on a printed body, the fiducial ball, marker cubes and the wrist fisheye" height="270">
   <a href="media/glove-collection-demo.mp4"><img src="media/glove-collection-1p5x.gif" alt="Collecting a pick-and-place demonstration with the glove, 1.5x speed" height="270"></a>
 </p>
-<p align="center"><em>Left: the glove, with the robot's own gripper fingers, the fiducial ball, the marker cubes and the wrist fisheye.
-Right: one demonstration at 1.5× speed (click for the <a href="media/glove-collection-demo.mp4">full 63-second clip</a>).</em></p>
+<p align="center"><em>Left: the previous build, with the optional wrist fisheye. Right: one demonstration at 1.5× speed
+(<a href="media/glove-collection-demo.mp4">full clip</a>).</em></p>
 
 <p align="center">
   <a href="media/yam-umi-paper-video.mp4"><img src="media/grid-eval-scene15-2x.gif" alt="Placement-grid evaluation: the same block position for four policies, 2x speed" width="560"></a>
 </p>
-<p align="center"><em>Placement-grid evaluation on the YAM at 2× speed, one placement, four policies: teleop-only (top left),
-co-trained forward camera (top right), co-trained wrist camera (bottom left), half-teleop mix (bottom right).
-Continuous rollouts of a single policy: <a href="media/rollout-demo-1x-720p.mp4">normal speed</a> or <a href="media/rollout-demo-6x-720p.mp4">6× speed</a>.</em></p>
+<p align="center"><em>One placement, four policies, 2× speed: teleop-only, co-trained forward camera, co-trained wrist camera, half-teleop mix.
+Continuous rollouts: <a href="media/rollout-demo-1x-720p.mp4">1×</a>, <a href="media/rollout-demo-6x-720p.mp4">6×</a>.</em></p>
 
 | | |
 |---|---|
-| **Ergonomics** | 355 g on the hand with cable (318 g without), under half of UMI's 780 g; nothing to initialise |
-| **Dexterity** | the YAM gripper's tasks (parallel-jaw pick, place, insert); 0–86 mm measured opening with the robot's own fingers; achievable opening depends on the wearer's hand shape |
-| **Strength** | 1 kg by a jug handle, 1.5 kg slips, 2 kg no (the robot: 1.5 kg / 2 kg); MGN9 rails, no wear in a month |
-| **Labels** | absolute 6-DoF pose and jaw width every frame from printed fiducials; 7.7 mm / 1.7° median against the robot's kinematics |
-| **Reproducibility** | hardware and software open; one two-plate print, 7 purchased parts; three units built, one by others |
-| **Cost** | $79 per glove ($22 without the wrist camera); $122 of shared rig; about $200 per system vs UMI's $371 |
-
-YAM-UMI mirrors the YAM linear gripper's jaw geometry, reuses the YAM wrist camera
-mount, and reproduces the gripper's own rail-and-pinion mechanism, so **the
-camera pose relative to the gripper tips, and the way those tips move, are the
-same during data collection as on the deployed robot**. Aperture is recovered
-from fiducial markers rather than a servo encoder, so there is no motor to
-backdrive and no loaded plastic linkage to fail.
-
-> **Status:** hardware, collection, calibration, dataset generation, and policy
-> training have been demonstrated. About 170 glove episodes have been collected;
-> the [paper](paper/main.pdf) evaluates 165 glove episodes alongside 185
-> teleoperated episodes. See [Status and limitations](#status-and-limitations).
+| **Weight** | about 370 g on the hand, no cable (previous wrist-camera build: 355 g); UMI: 780 g |
+| **Jaws** | the YAM's own fingers and travel, 0–86 mm; parallel-jaw pick, place, insert |
+| **Strength** | 2 kg by a jug handle since the November 2026 reinforcement (before: 1 kg); MGN9 rails, no wear in a month |
+| **Labels** | absolute 6-DoF pose and jaw width every frame; 7.7 mm / 1.7° median against the robot's kinematics |
+| **Cost** | $22 per glove plus one $122 4K camera per system (Arducam B0587, fixed or head-worn); UMI: $371 |
+| **Built** | three units, one by others; hardware and software open |
 
 ## Why another UMI variant
 
-The point of a UMI-style rig is to collect demonstrations without a robot in the
-loop, then train a policy that consumes wrist-camera images. That only works if
-what the camera sees at collection time resembles what it sees at deployment
-time.
+A UMI-style rig only works if the gripper the policy learns to drive behaves
+like the one it held during collection. This design began as
+[HandUMI](https://github.com/murobotics-ai/handumi-hw) on a YAM and kept its
+glove form factor and strap retention, but two things had to change:
 
-YAM-UMI keeps the robot's stock gripper fingers and camera mount, and adapts the
-handheld device to match them. The current hardware targets the YAM linear
-gripper; adapting it to another gripper would require matching that gripper's
-geometry and camera placement.
-
-This design began as an attempt to use
-[HandUMI](https://github.com/murobotics-ai/handumi-hw) on a YAM. HandUMI is one
-of the open hand-worn UMI designs with **synchronized jaws**. Its camera
-placement and lever linkage needed changes for the YAM.
-
-### 1. The camera extrinsic could not be matched
-
-HandUMI uses a shared body with interchangeable gripper tips and software
-retargeting for different arms. Its camera mount does not readily reproduce
-the YAM camera's angle relative to the gripper tips.
-
-YAM-UMI instead reuses the YAM gripper's own fisheye camera mount on a body that
-reproduces the YAM jaw geometry, so the camera-to-tip transform is matched by
-construction rather than corrected in software. Because the device also accepts
-the **actual gripper tips that ship with the YAM arm**, the jaws occlude the same
-part of the frame, the aperture-to-pixel mapping is the same, and the contact
-patch on the object is the same.
-
-### 2. The servo and the lever linkage
-
-HandUMI measures aperture with a Feetech servo encoder. Backdriving its gear
-train adds friction during pinching. In our build, the printed lever parts also
-popped out of the mechanism during normal use.
-
-YAM-UMI carries the motion on two MGN9 linear rails instead, with a single pinion
-between two racks — one rack per jaw — to keep the jaws synchronized.
-
-This matches the YAM gripper's mechanism: both jaws move symmetrically about
-the same centerline.
-
-Aperture is read from fiducial markers on the tips, the approach the original UMI used.
-Consequences:
-
-- **No backdrive friction.** The pinch is governed by the rails and the
-  rack-and-pinion coupling only.
-- **No servo, controller, or power supply** in the bill of materials, and no
-  cable routing for them.
-- **No loaded lever linkage.** The printed parts are brackets and mounts, not
-  structural links carrying the pinch load.
+- **The gripper itself.** HandUMI uses printed tips and software retargeting.
+  YAM-UMI reproduces the YAM jaw geometry and takes the **actual tips that ship
+  with the arm**, so contact patch, travel and occlusion match the robot. The
+  first build also carried the YAM's wrist fisheye on the robot's own mount;
+  [head-cam-umi](https://github.com/YosubShin/head-cam-umi) then showed that
+  one external camera can both label the glove and be the policy's camera, so
+  the wrist camera became optional.
+- **No servo, no lever linkage.** HandUMI reads aperture from a Feetech servo
+  whose gear train adds friction when backdriven, and its printed levers popped
+  out in our build. YAM-UMI runs each jaw on an MGN9 rail with one pinion
+  between two racks, as the YAM gripper does, and reads aperture from printed
+  markers as the original UMI did. Nothing on the glove carries the pinch load
+  except the rails and the rack-and-pinion coupling.
 
 ## What it records
 
 | Signal | Source |
 |---|---|
-| Wrist pose, SE(3) | Dodecahedral ArUco marker ball and gripper-back markers observed by an external camera |
-| Gripper aperture | 6 mm AprilTag (16h5) markers on the gripper tips, seen by the wrist fisheye camera |
-| Wrist-view video | Fisheye USB camera on the YAM camera mount |
+| Wrist pose, SE(3) | dodecahedral ArUco marker ball and gripper-back markers, seen by the external camera |
+| Gripper aperture | ArUco markers on printed *tails* that ride on each tip, read against the back markers; or 6 mm AprilTag tip markers under the optional wrist fisheye |
+| Video | the external camera (fixed, or head-worn); the optional wrist fisheye |
 
-The evaluated setup uses a fixed external camera to recover absolute pose from
-fiducials, without SLAM or an IMU. The wrist fisheye records the grasp and reads
-the tip markers for aperture. Recording, calibration, labelling, and dataset
-construction are provided by
+Pose comes from fiducials alone, with no SLAM or IMU. Validated on the robot
+over 30 teleoperated episodes against its joint encoders: **7.7 mm median,
+22.7 mm p95, 1.7°** at a tool point 13 cm from the ball, solved in 98.5% of
+frames, with the hand-eye calibration (4.8 mm) dominating the budget. Method,
+camera coverage and failure modes: [`pos-tracking/dynamic-accuracy.md`](pos-tracking/dynamic-accuracy.md)
+and [`pos-tracking/README.md`](pos-tracking/README.md). Recording, calibration,
+labelling and dataset construction live in
 [head-cam-umi](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/README.md).
 
-### Dodecahedral wrist tracker
+## Build configurations
 
-The external camera tracks the marker ball and the gripper-back markers. The
-back markers were originally paired with tail markers for external-camera
-aperture measurements; they also provide a pose fallback when the hand hides
-the ball. Collection must remain within the cameras' view.
+| Configuration | On the glove | Off the glove |
+|---|---|---|
+| **Fixed external camera** (the paper's pose source) | marker ball, gripper-back markers, tails | one calibrated camera beside the workspace |
+| **Head-worn camera** ([head-cam-umi](https://github.com/YosubShin/head-cam-umi)) | the same | the head camera, printed tiles on the workspace; at deployment the same camera on a positioner |
+| **Wrist fisheye** (classic UMI view, the paper's aperture source) | camera mount, fisheye and cable, tip markers | — |
 
-Measured with the ball at roughly 94 cm standoff, **on settled holds**:
+The ball, back markers and tails are the base build: without them nothing can
+locate the glove. Ball parts are in [`pos-tracking/`](pos-tracking/); the tails
+and back-marker holders are printed from
+[head-cam-umi](https://github.com/YosubShin/head-cam-umi#hardware).
 
-| Metric | Result |
-|---|---|
-| Within-hold precision | 0.46 mm RMS (median), p90 0.68 mm |
-| Revisit repeatability | 0.08–0.17 mm SD per axis (lateral 0.12, depth 0.17) |
-
-Coverage — the fraction of frames with enough faces visible to solve a bundle
-pose — depends strongly on the external camera:
-
-| Camera | ≥1 face | ≥2 faces | ≥3 faces |
-|---|---|---|---|
-| Sony (4K 30p, H.264) | 100% | 90.8% | 77.5% |
-| Arducam B0591 (1080p, focus locked via v4l2) | 79.6% | 68.3% | 59.1% |
-
-**Update (2026-09):** both of the original caveats — settled-holds-only, and
-absolute pose unresolved — have since been resolved by measuring this same
-ball design on the real YAM arm against its joint encoders. During full-speed
-teleoperated manipulation (30 episodes, ~23k frames), fused-ball pose agrees
-with the robot's forward kinematics to **7.7 mm median / 22.7 mm p95 / 1.7°**
-at a tool point 13 cm from the ball, with pose solved in 98.5% of frames;
-the error budget is dominated by the hand-eye calibration (4.8 mm residual),
-not the camera. The earlier 14%/9° discrepancies were extrinsics error, fixed
-by a proper `calibrateRobotWorldHandEye` solve harvested from ordinary
-episodes. Full numbers, method, and known failure modes:
-[`pos-tracking/dynamic-accuracy.md`](pos-tracking/dynamic-accuracy.md).
-
-The Arducam coverage was measured before mount or field-of-view tuning.
-
-See [`pos-tracking/README.md`](pos-tracking/README.md) for the build and
-calibration procedure.
-
-The third-party [tinyumi Quest-controller mount](https://github.com/vovw/tinyumi/blob/main/pos-tracking/quest_mount/handumi_v1/README.md)
-provides an alternative pose source. It requires that fork's revised base plate
-and mounting hardware and has not been tested by the YAM-UMI authors.
+**The wrist fisheye does not currently fit.** The revised `arc_extender` takes
+the space above the arc that the camera mount used, so the two cannot share
+`plate_v7`. An extender with a cut-out is possible but untested: the H-shaped
+extender is what removed the torsion of the earlier build. If you need the
+wrist view, mount the camera, skip the ball, and use classic UMI's SLAM for pose.
 
 ## Design updates
 
+### 2026-11-12 — Reinforced plate v7, bracket v5, adapter v12, handle v15, pinion z13
+
+Exported from the Onshape assembly; the glove now lifts a 2 kg jug.
+
+- `plate_v7`: H-shaped with 15.5 mm lips, replacing the flat 10.4 mm `plate_v6`;
+  M3 seats at ±20 and ±40 mm on both rail rows, M2 seats in the ends for the
+  back-marker holders, camera-mount seats kept.
+- `L_bracket_v5`: 21.6 mm wide instead of 9.1 mm, 3.5 mm counterbores for the
+  four M3 × 16 carriage screws, two M4 inserts for the finger. v4 bent under a
+  hard squeeze.
+- `adapter_v12`: 78.5 mm long. The four carriage screws now clamp bracket and
+  adapter together into the MGN9C; two M3 inserts at the far end take the handle.
+- `handle_v15`: cradle with two strap slots, bolts to the adapter with two M3 × 30.
+- `pinion_z13_x018_deep_v0`–`v3`: 13 teeth, module 1, 0.18 profile shift, 15.3 to
+  15.0 mm, for the new rack spacing.
+- `arc_extender`: 50 × 41.5 × 65 mm, four screws into the back of the plate.
+- Superseded files removed; commit `34d9f77` has v6, v11, v4, v14 and the z18
+  pinions. Screw lengths in the [BOM](bom/README.md) and
+  [guide](docs/assembly.md) are from the mated CAD, marked where unconfirmed on
+  a built unit; the guide's drawings are rendered from the same CAD.
+
 ### 2026-10-01 — Adapter v11
 
-- Removed the adapter boss so the jaw adapter clears the rail's rubber end caps
-  without cutting them. Keep the caps intact to prevent the carriages from
-  running off the rails and losing their ball bearings.
-- Replaced adapter v10 with the v11 [STEP](hardware/STEP/adapter_v11.step) and
-  [STL](hardware/STL/adapter_v11.stl) files.
+Removed the adapter boss so the jaw clears the rail's rubber end caps; keep the
+caps, they stop the carriages from running off the rails.
 
 ### 2026-09-28 — L bracket v4 and handle v14
 
-- Updated the L bracket to mitigate plate bending when squeezing the glove hard.
-- Changed gripper fastening from M4 bolts and nuts to M4 screws with heat-set
-  inserts to make assembly easier.
-- Updated the [STEP](hardware/STEP/L_bracket_v4.step) and
-  [STL](hardware/STL/L_bracket_v4.stl) files, replacing v3.
-- Updated the handle to v14, removing the side hole for an M4 nut. The handle
-  attaches to the L plate with an M3 screw and heat-set insert; the remaining
-  M4 hole serves only to prevent the handle from rotating in place.
-  Updated the [STEP](hardware/STEP/handle_v14.step) and
-  [STL](hardware/STL/handle_v14.stl) files, replacing v13.
+Bracket stiffened against plate bending; finger fastening moved from M4 nuts to
+heat-set inserts; handle attached by one M3 screw with an anti-rotation hole.
 
 ## Parts
 
 ### Gripper body — [`hardware/`](hardware/)
 
-Printed parts are provided as STEP and STL. The STEP files are the source of
-truth; the STLs were tessellated from them at 0.05 mm chordal tolerance and are
-watertight, so re-export from STEP if you want a different resolution.
+STEP is the source of truth; the STLs are tessellated from it at 0.05 mm.
 
 | Part | Size (mm) | Role |
 |---|---|---|
-| `plate_v6` | 102 × 65 × 10.4 | Main plate; carries both linear rails, the camera arm, and the pinion axle |
-| `adapter_v11` | 50 × 25.9 × 10.6 | Carriage-to-jaw adapter; presents the YAM gripper tip interface |
-| `pinion_z18_deep_v0`–`v3` | ⌀20.0–19.7 × 10.6 | Module 1, z=18 spur pinion coupling the two jaw racks for symmetric motion, as in the YAM gripper. Four fit variants — see [Printing](#printing) |
-| `handle_v14` | 32 × 17 × 55 | Operator handle |
-| `L_bracket_v4` | — | Sits between the gripper finger and carriage adapter and connects to the handle |
-| `YAM_linear_gripper_fisheye_camera_mount` | — | Fisheye camera mount, matching the YAM wrist camera pose |
-
-<!-- TODO: verify the remaining plate, adapter and handle descriptions against
-     the assembled hardware. The L bracket role is confirmed by the designer. -->
+| `plate_v7` (Onshape `gripper_plate`) | 103 × 65 × 15.5 | main plate: rails, pinion axle, arc extender, back-marker holders |
+| `adapter_v12` (`carriage_L_bracket_adapter`) | 78.5 × 28.2 × 14.1 | rack; bolts the bracket to the carriage; handle inserts |
+| `L_bracket_v5` (`L_bracket`) | 74.1 × 21.6 × 51.5 | between finger and adapter; M4 inserts for the finger |
+| `handle_v15` | 31.5 × 22 × 44 | finger cradle with strap slots |
+| `pinion_z13_x018_deep_v0`–`v3` | ⌀15.3–15.0 × 10.1 | four fit variants, see [Printing](#printing) |
+| `YAM_linear_gripper_fisheye_camera_mount` | — | optional; not mountable with the current `arc_extender` |
 
 **Gripper tips are not printed.** Use the "Linear 4310" tips that ship with the
-YAM arm to match the robot's contact geometry. If you
-do not have spares, I2RT sells them as
-[Gripper Tips (for Linear-Gear Style Gripper)](https://i2rt.com/products/gripper-tips-for-linear-gear-style-gripper)
-($69), though they are frequently out of stock.
+YAM; I2RT sells [spares](https://i2rt.com/products/gripper-tips-for-linear-gear-style-gripper) ($69).
 
 ### Position tracking — [`pos-tracking/`](pos-tracking/)
 
-See [`pos-tracking/README.md`](pos-tracking/README.md) for marker specifications
-and printing instructions.
+- `wrist_dodecahedron_marker/` — the 51 mm marker ball, stalk, arc adapter and
+  extender.
+- `glove_markers_v4.pdf` — the marker sheet: 15 mm ArUco markers for the ball,
+  the tail and back markers, and the 6 mm AprilTag tip markers for the wrist
+  fisheye. Markers may go on the ball in any arrangement; calibrate each unit.
 
-- `wrist_dodecahedron_marker/` — the dodecahedral marker ball (51 mm across),
-  its stalk, arc adapter, and extender.
-- `glove_markers_v4.pdf` — the marker sheet: 15 mm ArUco markers for the ball
-  and the 6 mm AprilTag tip markers used for aperture sensing from the wrist
-  fisheye camera.
-
-The eleven markers can be placed in any arrangement on the ball. Calibrate each
-unit to recover its face-to-ID mapping and account for printing and placement
-tolerances.
-
-The marker sheet also carries tail and base markers for
-[head-cam-umi](https://github.com/YosubShin/head-cam-umi), which provide
-occlusion backup and external-camera aperture measurements. These require
-additional printed parts; see
-[optional forward-camera extensions](pos-tracking/README.md#optional-forward-camera-extensions).
+Marker specifications, printing and calibration: [`pos-tracking/README.md`](pos-tracking/README.md).
 
 ## Build
 
-- [Bill of materials](bom/README.md) — ~$79 per gripper in parts, plus shop supplies (filament, fastener kits, tape) if you are starting from nothing.
-- [Assembly](docs/assembly.md) — build order and fastener placement.
+- [Bill of materials](bom/README.md) — ~$22 per glove, plus the external camera and shop supplies.
+- [Assembly](docs/assembly.md) — build order, fastener placement, drawings.
 
 ### Printing
 
-The reference build was printed in **PETG** on a Bambu Lab X2D with the stock
-PETG profile and *Support for PLA/PETG* enabled. Only support settings were
-adjusted.
-
-**The pinion comes in four variants.** `pinion_z18_deep_v0`–`v3` are the same
-18-tooth, module-1 pinion at descending outside diameter — 20.0, 19.9, 19.8 and
-19.7 mm — a 0.1 mm clearance ladder against the racks. **Print all four on one
-plate and pick the one that runs smoothest** in your assembly. Fit varies with
-printer, filament, and insert alignment; `v3` worked best in the reference build.
+PETG on a Bambu Lab X2D with the stock profile and *Support for PLA/PETG*.
+**Print all four pinions** — a 0.1 mm clearance ladder from 15.3 to 15.0 mm —
+and keep the one that runs smoothest; `v3` did in the reference build.
 
 ## Status and limitations
 
-- **Glove collection and training:** about 170 glove episodes have been
-  collected and processed with the
-  [head-cam-umi workflow](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/README.md).
-  The [paper](paper/main.pdf) evaluates 165 glove episodes and 185 teleoperated
-  episodes. Adding glove data lowers validation loss, but does not significantly
-  improve rollout success in the reported evaluation.
-- **Pose accuracy:** robot-mounted validation over 30 episodes measured
-  7.7 mm median position error and 1.7° median orientation error against the
-  robot's forward kinematics, with pose solved in 98.5% of frames. These numbers
-  describe that validation setup, not coverage for every glove session. See
-  [`pos-tracking/dynamic-accuracy.md`](pos-tracking/dynamic-accuracy.md).
-- **Calibration:** camera intrinsics, ball geometry, and gripper-marker
-  calibration commands are published in
-  [head-cam-umi](https://github.com/YosubShin/head-cam-umi/blob/main/scripts/README.md).
-  Robot-side hand-eye calibration and dataset construction also require the
-  robot's kinematics.
-- **Aperture calibration:** caliper measurements at several openings across the
-  operating range (for example, four) establish the mapping from image-marker
-  measurements to aperture, with intermediate values interpolated. The paper
-  reports 0.9 mm holdout RMS for the spacer-based calibration.
-- **Occlusion handling:** missing aperture readings are interpolated between
-  available measurements. For pose, the gripper-back markers provide a fallback
-  when the dodecahedral ball is hidden. Interpolated readings are estimates,
-  distinct from frames with directly observed markers; the aperture calibration
-  error above is not a separate measurement of error during occlusion.
-- **Embodiment matching:** YAM-UMI is designed specifically to match the YAM
-  linear gripper's fingers and camera-to-gripper transform at deployment. The
-  design may serve as a starting point for other linear grippers, with changes
-  to the gripper fingers and camera mounting geometry to match the target robot.
-- **Second-hand support:** the ArUco 4×4, 100-marker dictionary was chosen to
-  leave IDs available for a second hand; a complete two-hand setup has not been
-  evaluated here.
+- About 170 glove episodes collected; the [paper](paper/main.pdf) evaluates
+  165 alongside 185 teleoperated ones. Adding glove data lowers validation loss
+  but did not significantly improve rollout success in that evaluation.
+- Pose accuracy above describes the robot-mounted validation, not every session.
+  Aperture calibration from caliper measurements at a few openings reaches
+  0.9 mm holdout RMS; readings during occlusion are interpolated and the back
+  markers stand in for a hidden ball.
+- The hardware matches the YAM linear gripper; another gripper needs its own
+  tips and jaw geometry. A two-hand setup has marker IDs reserved but has not
+  been evaluated.
 
 ## Related work
 
-- **[UMI](https://umi-gripper.github.io/)** (Chi et al.,
-  [arXiv:2402.10329](https://arxiv.org/abs/2402.10329)) — the original handheld
-  gripper, the source of both the fiducial-based aperture sensing this design
-  returns to and the principle of minimizing the observation embodiment gap.
-  UMI achieves that match by mounting its own fingers and camera on the robot;
-  YAM-UMI reverses the direction.
+- **[UMI](https://umi-gripper.github.io/)** ([arXiv:2402.10329](https://arxiv.org/abs/2402.10329)) —
+  the handheld gripper this returns to for fiducial aperture sensing and the
+  embodiment-gap principle; UMI mounts its fingers on the robot, YAM-UMI mounts
+  the robot's fingers on the hand.
 - **[HandUMI](https://github.com/murobotics-ai/handumi-hw)** (Murobotics) — the
-  direct starting point for this work, and one of the few open hand-worn UMI
-  designs with a synchronized parallel-jaw mechanism. YAM-UMI takes the
-  glove-style form factor and the hook-and-loop finger retention from it, and
-  diverges on camera placement, jaw mechanism, and aperture sensing for the
-  reasons above. If you want a robot-agnostic rig rather than a YAM-specific one,
-  or a direct encoder reading of aperture, HandUMI is the better fit. No HandUMI
-  CAD is used here.
-- **[Generalist](https://generalistai.com/)** — the wearable data-collection
-  approach HandUMI credits as its own motivation.
-
-### The robot this targets
-
-- **[YAM 6-DOF arm](https://i2rt.com/products/yam-6-dof-arm)** (I2RT Robotics) —
-  the arm YAM-UMI is built for. 6 DOF, 2 kg payload.
-- **[YAM documentation](https://doc.i2rt.com/products/yam)** — specifications and
-  setup for the arm and its linear gripper.
-- **[`i2rt-robotics/i2rt`](https://github.com/i2rt-robotics/i2rt)** — the Python
-  client library, URDF, and robot meshes. The meshes there are what this design's
-  gripper geometry and camera mount are dimensioned from; see
-  [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+  starting point: glove form factor and strap retention come from it, the jaw
+  mechanism and aperture sensing do not. For a robot-agnostic rig with an
+  encoder, it is the better fit. No HandUMI CAD is used here.
+- **[tinyumi](https://github.com/vovw/tinyumi/blob/main/pos-tracking/quest_mount/handumi_v1/README.md)** —
+  a third-party Quest-controller mount adapted from YAM-UMI, with its own base
+  plate; untested by us.
+- **The YAM:** [arm](https://i2rt.com/products/yam-6-dof-arm) (6 DOF, 2 kg payload),
+  [documentation](https://doc.i2rt.com/products/yam),
+  [`i2rt-robotics/i2rt`](https://github.com/i2rt-robotics/i2rt) (client library,
+  URDF and the meshes this design is dimensioned from).
 
 ## License and attribution
 
-This project is released under the [MIT License](LICENSE).
-
-Geometry in this repository is dimensioned from mesh files published by I2RT
-Robotics under the MIT License. See
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the full attribution.
-
-**This project is not affiliated with, endorsed by, or sponsored by I2RT
-Robotics.** "YAM" is used only to identify the robot arm this hardware is
-designed for.
+[MIT License](LICENSE). Geometry is dimensioned from mesh files published by
+I2RT Robotics under the MIT License; see
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). **Not affiliated with,
+endorsed by, or sponsored by I2RT Robotics**; "YAM" only identifies the arm
+this hardware is designed for.
